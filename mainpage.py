@@ -15,20 +15,21 @@ class TopBar(ttk.Frame):
         self.img_setting = images.get_image("einstellungen.png")
 
         # Set up placement and size  of the Top Bar
-        self.top_bar = ttk.Frame(parent, width=600, height=40)
-        self.top_bar.grid(row=0, column=0, sticky=tk.W + tk.E)
-        self.top_bar.columnconfigure(0, weight=1)
+        self["width"] = 600
+        self["height"] = 40
+        self.grid(row=0, column=0, sticky=tk.W + tk.E)
+        self.columnconfigure(0, weight=1)
 
         # Title
-        self.label_title = ttk.Label(self.top_bar, text="Password List", font=("", 18))
+        self.label_title = ttk.Label(self, text="Password List", font=("", 18))
         self.label_title.grid(row=0, column=0, sticky=tk.W, padx=10)
 
         # Buttons
-        ttk.Button(self.top_bar, image=self.img_setting,
+        ttk.Button(self, image=self.img_setting,
                    command=self.button_settings_click).grid(row=0, column=1, sticky=tk.E, padx=7, pady=10)
 
         # Styles
-        self.top_bar["style"] = "Top.TFrame"
+        self["style"] = "Top.TFrame"
         self.label_title["style"] = "Top.TLabel"
 
     def button_settings_click(self):
@@ -42,20 +43,19 @@ class Headline(ttk.Frame):
         self.parent = parent
 
         # Set up Frame
-        self.headline_frame = ttk.Frame(parent)
-        self.headline_frame.grid(row=1, column=0, padx=5, pady=(5, 0), sticky=tk.E + tk.W)
-        self.headline_frame.columnconfigure(4, weight=1)
+        self.grid(row=1, column=0, padx=5, pady=(5, 0), sticky=tk.E + tk.W)
+        self.columnconfigure(4, weight=1)
 
         # Headlines
-        self.label_website = ttk.Label(self.headline_frame, text="Website", width=31)
-        self.label_password = ttk.Label(self.headline_frame, text="Password", width=30)
+        self.label_website = ttk.Label(self, text="Website", width=31)
+        self.label_password = ttk.Label(self, text="Password", width=30)
 
         # place widgets
         self.label_website.grid(row=0, column=0, padx=5)
         self.label_password.grid(row=0, column=2, padx=5)
 
         # Styles
-        self.headline_frame["style"] = "Headline.TFrame"
+        self["style"] = "Headline.TFrame"
         self.label_website["style"] = "Headline.TLabel"
         self.label_password["style"] = "Headline.TLabel"
 
@@ -80,10 +80,8 @@ class Item(ttk.Frame):
         self.img_delete = images.get_image("trashcan.png")
         self.img_edit = images.get_image("bleistift.png")
 
-        # Set up Frame
-        self.item_frame = ttk.Frame(parent)
-        # Event when losing Focus of Item-Frame
-        self.item_frame.bind("<FocusOut>", self.frame_lost_focus)
+        # Event when losing Focus of Item-Frame - Used for State-Change
+        self.bind("<FocusOut>", self.frame_lost_focus)
 
         # tk variables for entry fields
         self.entry_val_website = tk.StringVar()
@@ -92,17 +90,17 @@ class Item(ttk.Frame):
         self.entry_val_password.set(self.password)
 
         # Entry widgets for row values
-        self.entry_website = ttk.Entry(self.item_frame, textvariable=self.entry_val_website, state="readonly", width=30)
+        self.entry_website = ttk.Entry(self, textvariable=self.entry_val_website, state="readonly", width=30)
         self.entry_website.grid(row=self.row_id, column=0, padx=5, pady=5, sticky=tk.W)
-        ttk.Separator(self.item_frame, orient="vertical").grid(row=self.row_id, column=1, padx=5, sticky=tk.N + tk.S)
-        self.entry_password = ttk.Entry(self.item_frame, textvariable=self.entry_val_password, state="readonly", show="*", width=30)
+        ttk.Separator(self, orient="vertical").grid(row=self.row_id, column=1, padx=5, sticky=tk.N + tk.S)
+        self.entry_password = ttk.Entry(self, textvariable=self.entry_val_password, state="readonly", show="*", width=30)
         self.entry_password.grid(row=self.row_id, column=2, padx=5, pady=5, sticky=tk.W)
-        ttk.Separator(self.item_frame, orient="vertical").grid(row=self.row_id, column=3, padx=5, sticky=tk.N + tk.S)
+        ttk.Separator(self, orient="vertical").grid(row=self.row_id, column=3, padx=5, sticky=tk.N + tk.S)
 
         # Buttons
-        self.item_copy_button = ttk.Button(self.item_frame, image=self.img_copy, command=self.button_copy_click)
-        self.item_delete_button = ttk.Button(self.item_frame, image=self.img_delete, command=self.button_delete_click)
-        self.item_edit_button = ttk.Button(self.item_frame, image=self.img_edit, command=self.button_edit_click)
+        self.item_copy_button = ttk.Button(self, image=self.img_copy, command=self.button_copy_click)
+        self.item_delete_button = ttk.Button(self, image=self.img_delete, command=self.button_delete_click)
+        self.item_edit_button = ttk.Button(self, image=self.img_edit, command=self.button_edit_click)
 
         # alternating Colorscheme of the rows
         # if item is added with Plus Button:
@@ -131,17 +129,17 @@ class Item(ttk.Frame):
         # add styling
         self.stylize_item_widgets(self.frame_style, self.entry_style)
 
-        self.item_frame.grid(row=self.row_id, column=0, sticky=tk.E + tk.W)
+        self.grid(row=self.row_id, column=0, sticky=tk.E + tk.W)
         # self.item_frame.columnconfigure(2, weight=1)
 
         # Mouse Hover Event
-        self.item_frame.bind('<Enter>', self.mouse_enter)
-        self.item_frame.bind('<Leave>', self.mouse_leave)
+        self.bind('<Enter>', self.mouse_enter)
+        self.bind('<Leave>', self.mouse_leave)
 
     # Event - Mouse Hover over Item - highlights row
     def mouse_enter(self, event=None):
         if self.state == "normal":
-            self.item_frame.configure(style="MouseEnter.TFrame")
+            self.configure(style="MouseEnter.TFrame")
             self.entry_website.configure(style="MouseEnter.TLabel")
             self.entry_password.configure(style="MouseEnter.TLabel")
             self.item_copy_button.grid(row=self.row_id, column=4)
@@ -151,7 +149,7 @@ class Item(ttk.Frame):
     # Event - Mouse leaves Item - return to normal color
     def mouse_leave(self, event=None):
         if self.state == "normal":
-            self.item_frame.configure(style=self.frame_style)
+            self.configure(style=self.frame_style)
             self.entry_website.configure(style=self.entry_style)
             self.entry_password.configure(style=self.entry_style)
             self.item_copy_button.grid_forget()
@@ -182,10 +180,10 @@ class Item(ttk.Frame):
             print(self.entry_style)
             if self.entry_style == "Item1.TEntry":
                 entry_style = "Item1.TLabel"
-                self.item_frame["style"] = "Item1.TFrame"
+                self["style"] = "Item1.TFrame"
             else:
                 entry_style = "Item2.TLabel"
-                self.item_frame["style"] = "Item2.TFrame"
+                self["style"] = "Item2.TFrame"
 
         self.entry_website["state"] = self.entry_password["state"] = entry_state
         self.entry_website["style"] = self.entry_password["style"] = entry_style
@@ -207,8 +205,8 @@ class Item(ttk.Frame):
     def button_delete_click(self):
         # messagebox.showinfo("Delete-Button", "Delete-Button ID: " + str(self.row_id))
         # todo: Delete in Database
-        self.item_frame.grid_forget()
-        self.item_frame.destroy()
+        self.grid_forget()
+        self.destroy()
         ListFrame.items.remove(self)
         ListFrame.alternate_colorscheme()
         # ListFrame.row_down_count()
@@ -219,7 +217,7 @@ class Item(ttk.Frame):
         self.change_state("edit")
 
     def stylize_item_widgets(self, frame_style, entry_style):
-        self.item_frame["style"] = frame_style
+        self["style"] = frame_style
         self.entry_website["style"] = entry_style
         self.entry_password["style"] = entry_style
 
@@ -242,18 +240,19 @@ class ListFrame(ttk.Frame):
         # In order to have a Scrollbar for a frame
         # a Canvas needs to be created to hold a scrollable Frame
 
-        # Create Frame for Canvas
-        self.canvas_frame = ttk.Frame(parent, relief=tk.GROOVE, padding="2 2 2 2")
-        self.canvas_frame.grid(row=2, column=0, padx=5, pady=(0, 5), sticky=tk.N + tk.E + tk.S + tk.W)
-        self.canvas_frame.columnconfigure(0, weight=1)     # Expand widget on Window Resize
-        self.canvas_frame.rowconfigure(0, weight=1)
+        # Configure Frame
+        self["relief"] = tk.GROOVE
+        self["padding"] = "2 2 2 2"
+        self.grid(row=2, column=0, padx=5, pady=(0, 5), sticky=tk.N + tk.E + tk.S + tk.W)
+        self.columnconfigure(0, weight=1)  # Expand widget on Window Resize
+        self.rowconfigure(0, weight=1)
 
         # Create Canvas
-        self.canvas = tk.Canvas(self.canvas_frame, highlightthickness=0, background="white")
+        self.canvas = tk.Canvas(self, highlightthickness=0, background="white")
         self.canvas.grid(row=0, column=0, sticky="nswe")
 
-        # Create Scrollbar - placed inside canvas_frame on the ride side of the Canvas
-        self.scrollbar = ttk.Scrollbar(self.canvas_frame, orient="vertical", command=self.canvas.yview)
+        # Create Scrollbar - placed inside ListFrame on the ride side of the Canvas
+        self.scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
         self.scrollbar.grid(row=0, column=1, sticky="ns")
 
         # bind Canvas with Scrollbar
@@ -372,14 +371,14 @@ class MainPage(ttk.Frame):
         self.main_frame = ttk.Frame(parent)
 
         # Frame placement and Expand-Behaviour
-        self.main_frame.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
+        self.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
         # Expand List Frame on Window Resize
-        self.main_frame.columnconfigure(0, weight=1)
-        self.main_frame.rowconfigure(2, weight=1)
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(2, weight=1)
 
         # Styles
-        self.main_frame["style"] = "Main.TFrame"
+        self["style"] = "Main.TFrame"
 
         # Create Sub frames
-        self.top_bar = TopBar(self.main_frame)
-        self.list_frame = ListFrame(self.main_frame)
+        self.top_bar = TopBar(self)
+        self.list_frame = ListFrame(self)

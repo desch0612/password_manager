@@ -29,7 +29,7 @@ class MainApplication(ttk.Frame):
         styles.load_styles()
 
         # Main Page contains main Window for Password List
-        self.main_page = mainpage.MainPage(self.parent)
+        self.main_page = mainpage.MainPage(self.parent)     # todo: Maybe use self instead of root
 
 
 def main():
