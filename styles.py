@@ -14,8 +14,10 @@ def load_styles():
     # Item Frame
     style.configure("Item1.TFrame", background="#eeeeee")
     style.configure("Item1.TLabel", background="#eeeeee")
+    style.configure("Item1.TEntry", background="#eeeeee")
     style.configure("Item2.TFrame", background="white")
     style.configure("Item2.TLabel", background="white")
+    style.configure("Item2.TEntry", background="white")
     style.configure("MouseEnter.TFrame", background="#dddddd")
     style.configure("MouseEnter.TLabel", background="#dddddd")
 

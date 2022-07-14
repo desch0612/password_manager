@@ -70,6 +70,11 @@ class Item(ttk.Frame):
         self.password = args[2]
         self.used_plus_button = args[3]     # bool: True if item is added manually with Plus Button
 
+        # "normal" -> default State for saved entries
+        # "edit" -> Edit-State when Edit-Button is pressed
+        # "create" -> When Plus-Button is used to add a Row
+        self.state = args[4]   # "normal", "edit" or ""
+
         # load image
         self.img_copy = images.get_image("kopieren.png")
         self.img_delete = images.get_image("trashcan.png")
@@ -77,6 +82,8 @@ class Item(ttk.Frame):
 
         # Set up Frame
         self.item_frame = ttk.Frame(parent)
+        # Event when losing Focus of Item-Frame
+        self.item_frame.bind("<FocusOut>", self.frame_lost_focus)
 
         # tk variables for entry fields
         self.entry_val_website = tk.StringVar()
@@ -133,21 +140,57 @@ class Item(ttk.Frame):
 
     # Event - Mouse Hover over Item - highlights row
     def mouse_enter(self, event=None):
-        self.item_frame.configure(style="MouseEnter.TFrame")
-        self.entry_website.configure(style="MouseEnter.TLabel")
-        self.entry_password.configure(style="MouseEnter.TLabel")
-        self.item_copy_button.grid(row=self.row_id, column=4)
-        self.item_delete_button.grid(row=self.row_id, column=5, padx=5)
-        self.item_edit_button.grid(row=self.row_id, column=6, padx=(0, 50))
+        if self.state == "normal":
+            self.item_frame.configure(style="MouseEnter.TFrame")
+            self.entry_website.configure(style="MouseEnter.TLabel")
+            self.entry_password.configure(style="MouseEnter.TLabel")
+            self.item_copy_button.grid(row=self.row_id, column=4)
+            self.item_delete_button.grid(row=self.row_id, column=5, padx=5)
+            self.item_edit_button.grid(row=self.row_id, column=6, padx=(0, 50))
 
     # Event - Mouse leaves Item - return to normal color
     def mouse_leave(self, event=None):
-        self.item_frame.configure(style=self.frame_style)
-        self.entry_website.configure(style=self.entry_style)
-        self.entry_password.configure(style=self.entry_style)
-        self.item_copy_button.grid_forget()
-        self.item_delete_button.grid_forget()
-        self.item_edit_button.grid_forget()
+        if self.state == "normal":
+            self.item_frame.configure(style=self.frame_style)
+            self.entry_website.configure(style=self.entry_style)
+            self.entry_password.configure(style=self.entry_style)
+            self.item_copy_button.grid_forget()
+            self.item_delete_button.grid_forget()
+            self.item_edit_button.grid_forget()
+
+    def frame_lost_focus(self, event=None):
+        if self.state == "edit":
+            self.change_state("normal")
+
+    # Changes State of Item
+    def change_state(self, state):
+        self.state = state
+        entry_state = ""
+        entry_style = ""
+
+        if self.state == "edit":
+            entry_state = "normal"  # Entry will be editable
+
+            if self.entry_style == "Item1.TLabel":
+                entry_style = "Item1.TEntry"
+            else:
+                entry_style = "Item2.TEntry"
+
+        elif self.state == "normal":
+            entry_state = "readonly"  # Entry will not be editable
+
+            print(self.entry_style)
+            if self.entry_style == "Item1.TEntry":
+                entry_style = "Item1.TLabel"
+                self.item_frame["style"] = "Item1.TFrame"
+            else:
+                entry_style = "Item2.TLabel"
+                self.item_frame["style"] = "Item2.TFrame"
+
+        self.entry_website["state"] = self.entry_password["state"] = entry_state
+        self.entry_website["style"] = self.entry_password["style"] = entry_style
+
+        #else:   # "normal"
 
     # Copy password to Clipboard
     # uses Tk object to copy to clipboard
@@ -172,8 +215,8 @@ class Item(ttk.Frame):
 
     # Copy password to Clipboard
     def button_edit_click(self):
-        messagebox.showinfo("Edit-Button", "Edit-Button ID: " + str(self.row_id))
         # todo: functionality for Edit
+        self.change_state("edit")
 
     def stylize_item_widgets(self, frame_style, entry_style):
         self.item_frame["style"] = frame_style
@@ -240,7 +283,7 @@ class ListFrame(ttk.Frame):
 
         for entry in entries:
             # Create new Item and store in List
-            ListFrame.items.append(Item(self.list_frame, ListFrame.row_count, entry["name"], entry["pw"], False))
+            ListFrame.items.append(Item(self.list_frame, ListFrame.row_count, entry["name"], entry["pw"], False, "normal"))
             ListFrame.row_up_count()
 
         # Label will function as a Button
@@ -259,7 +302,7 @@ class ListFrame(ttk.Frame):
         row_id = ListFrame.row_count
         self.button_add_row.grid(row=row_id+1)
         # Create new Item and store in List
-        ListFrame.items.append(Item(self.list_frame, row_id, name, pw, True))
+        ListFrame.items.append(Item(self.list_frame, row_id, name, pw, True, "normal"))
         ListFrame.row_up_count()
         self.list_frame.update()    # Frame needs to be redrawn before updating the Scrollbar region
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))     # Update Scrollbar region
