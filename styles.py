@@ -4,8 +4,8 @@ import tkinter.ttk as ttk
 def load_styles():
     style = ttk.Style()  # Styling parameter for ttk-Widgets
     # Top Frame
-    style.configure("Top.TFrame", background="#aaaaaa")
-    style.configure("Top.TLabel", background="#aaaaaa")
+    style.configure("Top.TFrame", background="white")
+    style.configure("Top.TLabel", background="white")
 
     # Headline Frame
     style.configure("Headline.TFrame", background="white")
