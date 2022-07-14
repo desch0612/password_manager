@@ -13,7 +13,6 @@ def get_entries():
     entry10 = {"id": 10, "name": "website4", "pw": "kdjak"}
     entry11 = {"id": 11, "name": "website4", "pw": "kdjak"}
     entry12 = {"id": 12, "name": "website4", "pw": "kdjak"}
-    entry13 = {"id": 13, "name": "website4", "pw": "kdjak"}
 
-    entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12, entry13]
+    entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
     return entries
