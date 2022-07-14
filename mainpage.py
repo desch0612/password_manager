@@ -61,9 +61,14 @@ class Headline(ttk.Frame):
 
 
 # Item class encapsulates one Row of the Password List
+# list_frame = extra Frame inside Canvas
+# parent = Object of actual ListFrame Class
+#
+# list_frame gets used for super-class constructor because
+# Item-object has to be created in extra Frame of the ListFrame object
 class Item(ttk.Frame):
-    def __init__(self, parent, *args):
-        ttk.Frame.__init__(self, parent)    # Constructor of super-class
+    def __init__(self, list_frame, parent, *args):
+        ttk.Frame.__init__(self, list_frame)    # Constructor of super-class
         self.parent = parent
         self.row_id = args[0]
         self.website = args[1]
@@ -191,15 +196,9 @@ class Item(ttk.Frame):
         #else:   # "normal"
 
     # Copy password to Clipboard
-    # uses Tk object to copy to clipboard
     def button_copy_click(self):
-        # todo: maybe change to access root
-        r = tk.Tk()
-        r.withdraw()
-        r.clipboard_clear()
-        r.clipboard_append(self.entry_password.get())
-        r.update()  # now it stays on the clipboard after the window is closed
-        r.destroy()
+        self.clipboard_clear()
+        self.clipboard_append(self.entry_password.get())
 
     # Copy password to Clipboard
     def button_delete_click(self):
@@ -282,7 +281,8 @@ class ListFrame(ttk.Frame):
 
         for entry in entries:
             # Create new Item and store in List
-            ListFrame.items.append(Item(self.list_frame, ListFrame.row_count, entry["name"], entry["pw"], False, "normal"))
+            # self gets passed as second argument as a parent
+            ListFrame.items.append(Item(self.list_frame, self, ListFrame.row_count, entry["name"], entry["pw"], False, "normal"))
             ListFrame.row_up_count()
 
         # Label will function as a Button
@@ -301,7 +301,7 @@ class ListFrame(ttk.Frame):
         row_id = ListFrame.row_count
         self.button_add_row.grid(row=row_id+1)
         # Create new Item and store in List
-        ListFrame.items.append(Item(self.list_frame, row_id, name, pw, True, "normal"))
+        ListFrame.items.append(Item(self.list_frame, self, row_id, name, pw, True, "normal"))
         ListFrame.row_up_count()
         self.list_frame.update()    # Frame needs to be redrawn before updating the Scrollbar region
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))     # Update Scrollbar region
@@ -366,9 +366,6 @@ class MainPage(ttk.Frame):
     def __init__(self, parent):
         ttk.Frame.__init__(self, parent)    # Constructor of super-class
         self.parent = parent
-
-        # main_frame will encapsulate every Subframe and widget on MainPage
-        self.main_frame = ttk.Frame(parent)
 
         # Frame placement and Expand-Behaviour
         self.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
