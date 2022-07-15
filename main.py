@@ -5,9 +5,9 @@
 
 import tkinter as tk
 import tkinter.ttk as ttk   # module for themed widgets - will be used instead of tk if available
-import mainpage as mainpage
-import images as images
-import styles as styles
+import mainpage
+import images
+import styles
 
 
 # Class for initial Window config
