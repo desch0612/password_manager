@@ -157,9 +157,9 @@ class Item(ttk.Frame):
             self.configure(style=self.frame_style)
             self.entry_website.configure(style=self.entry_style)
             self.entry_password.configure(style=self.entry_style)
-            self.item_copy_button.grid_forget()
-            self.item_delete_button.grid_forget()
-            self.item_edit_button.grid_forget()
+            self.item_copy_button.grid_remove()
+            self.item_delete_button.grid_remove()
+            self.item_edit_button.grid_remove()
 
     def frame_lost_focus(self, event=None):
         if self.state == "edit":
@@ -182,13 +182,16 @@ class Item(ttk.Frame):
         elif self.state == "normal":
             entry_state = "readonly"  # Entry will not be editable
 
-            print(self.entry_style)
-            if self.entry_style == "Item1.TEntry":
+            if self.entry_style == "Item1.TLabel":
                 entry_style = "Item1.TLabel"
                 self["style"] = "Item1.TFrame"
             else:
                 entry_style = "Item2.TLabel"
                 self["style"] = "Item2.TFrame"
+
+            self.item_copy_button.grid_remove()
+            self.item_delete_button.grid_remove()
+            self.item_edit_button.grid_remove()
 
         self.entry_website["state"] = self.entry_password["state"] = entry_state
         self.entry_website["style"] = self.entry_password["style"] = entry_style
