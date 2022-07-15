@@ -25,6 +25,7 @@ class TopBar(ttk.Frame):
         self.label_title.grid(row=0, column=0, sticky=tk.W, padx=10)
 
         # Buttons
+        # todo: Change to Label for Styling options like Plus-Button in ListFrame
         ttk.Button(self, image=self.img_setting,
                    command=self.button_settings_click).grid(row=0, column=1, sticky=tk.E, padx=7, pady=10)
 
@@ -78,7 +79,11 @@ class Item(ttk.Frame):
         # "normal" -> default State for saved entries
         # "edit" -> Edit-State when Edit-Button is pressed
         # "create" -> When Plus-Button is used to add a Row
-        self.state = args[4]   # "normal", "edit" or ""
+        self.state = args[4]   # "normal", "edit" or ""  todo: State maybe has to be put up on ListFrame-Level
+
+        # Item will revert to these variables if edit is cancelled
+        self.website_revert = ""
+        self.password_revert = ""
 
         # load image
         self.img_copy = images.get_image("kopieren.png")
@@ -102,7 +107,13 @@ class Item(ttk.Frame):
         self.entry_password.grid(row=self.row_id, column=2, padx=5, pady=5, sticky=tk.W)
         ttk.Separator(self, orient="vertical").grid(row=self.row_id, column=3, padx=5, sticky=tk.N + tk.S)
 
+        # Entry-Events
+        self.entry_website.bind("<Return>", self.save_changes)
+        self.entry_password.bind("<Return>", self.save_changes)
+
         # Buttons
+        # Copy Button will change to Save-Changes-Button while in Edit-Mode
+        # Delete Button will change to Discard-Changes-Button while in Edit-Mode
         self.item_copy_button = ttk.Button(self, image=self.img_copy, command=self.button_copy_click)
         self.item_delete_button = ttk.Button(self, image=self.img_delete, command=self.button_delete_click)
         self.item_edit_button = ttk.Button(self, image=self.img_edit, command=self.button_edit_click)
@@ -143,6 +154,7 @@ class Item(ttk.Frame):
 
     # Event - Mouse Hover over Item - highlights row
     def mouse_enter(self, event=None):
+        # don't change colors if ListFrame is in edit-mode
         if self.state == "normal":
             self.configure(style="MouseEnter.TFrame")
             self.entry_website.configure(style="MouseEnter.TLabel")
@@ -153,6 +165,7 @@ class Item(ttk.Frame):
 
     # Event - Mouse leaves Item - return to normal color
     def mouse_leave(self, event=None):
+        # don't change colors if ListFrame is in edit-mode
         if self.state == "normal":
             self.configure(style=self.frame_style)
             self.entry_website.configure(style=self.entry_style)
@@ -161,8 +174,26 @@ class Item(ttk.Frame):
             self.item_delete_button.grid_remove()
             self.item_edit_button.grid_remove()
 
+    def save_changes(self, event=None):
+        if self.state == "edit":
+            # todo: Save Changes to Database
+            self.change_state("normal")
+
+    # revert to old values
+    def discard_changes(self, event=None):
+        if self.state == "edit":
+            self.entry_website.delete(0, tk.END)
+            self.entry_password.delete(0, tk.END)
+            self.entry_website.insert(0, self.website_revert)
+            self.entry_password.insert(0, self.password_revert)
+            self.change_state("normal")
+
+    # if Item loses Focus while in edit-mode, user will be asked if changes should be saved
     def frame_lost_focus(self, event=None):
         if self.state == "edit":
+            if messagebox.askquestion("Discard change", "Save Changes?") == "no":
+                self.discard_changes(event)
+
             self.change_state("normal")
 
     # Changes State of Item
@@ -174,10 +205,26 @@ class Item(ttk.Frame):
         if self.state == "edit":
             entry_state = "normal"  # Entry will be editable
 
+            # In Case of Edit-Cancel
+            self.website_revert = self.entry_website.get()
+            self.password_revert = self.entry_password.get()
+
+            # Change Buttons - Bind Event and image
+            self.item_copy_button["image"] = images.get_image("save16x16.png")
+            self.item_delete_button["image"] = images.get_image("cross16x16.png")
+            self.item_copy_button["command"] = self.save_changes
+            self.item_delete_button["command"] = self.discard_changes
+            # Edit Button not needed while in Edit-mode
+            self.item_edit_button.grid_remove()
+
             if self.entry_style == "Item1.TLabel":
                 entry_style = "Item1.TEntry"
             else:
                 entry_style = "Item2.TEntry"
+
+            # set Focus on Website name and mark entire text
+            self.entry_website.focus_set()
+            self.entry_website.select_range(0, tk.END)
 
         elif self.state == "normal":
             entry_state = "readonly"  # Entry will not be editable
@@ -188,6 +235,14 @@ class Item(ttk.Frame):
             else:
                 entry_style = "Item2.TLabel"
                 self["style"] = "Item2.TFrame"
+
+            # Change Buttons - Bind Event and image
+            self.item_copy_button["image"] = images.get_image("kopieren.png")
+            self.item_delete_button["image"] = images.get_image("trashcan.png")
+            self.item_copy_button["command"] = self.button_copy_click
+            self.item_delete_button["command"] = self.button_delete_click
+            # Re-Place Edit-Button
+            self.item_edit_button.grid()
 
             self.item_copy_button.grid_remove()
             self.item_delete_button.grid_remove()
