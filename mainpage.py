@@ -152,6 +152,10 @@ class Item(ttk.Frame):
         self.bind('<Enter>', self.mouse_enter)
         self.bind('<Leave>', self.mouse_leave)
 
+        # Change State if Plus-Button is used
+        if self.state == "create":
+            self.change_state("create")
+
     # Event - Mouse Hover over Item - highlights row
     def mouse_enter(self, event=None):
         # don't change colors if ListFrame is in edit-mode
@@ -175,7 +179,7 @@ class Item(ttk.Frame):
             self.item_edit_button.grid_remove()
 
     def save_changes(self, event=None):
-        if self.state == "edit":
+        if self.state != "normal":
             # todo: Save Changes to Database
             self.change_state("normal")
 
@@ -187,46 +191,24 @@ class Item(ttk.Frame):
             self.entry_website.insert(0, self.website_revert)
             self.entry_password.insert(0, self.password_revert)
             self.change_state("normal")
+        # Remove Item if Changes are discarded in Create-Mode
+        elif self.state == "create":
+            self.button_delete_click()
 
     # if Item loses Focus while in edit-mode, user will be asked if changes should be saved
     def frame_lost_focus(self, event=None):
-        if self.state == "edit":
+        if self.state != "normal":
             if messagebox.askquestion("Discard change", "Save Changes?") == "no":
                 self.discard_changes(event)
 
-            self.change_state("normal")
+            if self.state == "edit":
+                self.change_state("normal")
 
     # Changes State of Item
     def change_state(self, state):
         self.state = state
-        entry_state = ""
-        entry_style = ""
 
-        if self.state == "edit":
-            entry_state = "normal"  # Entry will be editable
-
-            # In Case of Edit-Cancel
-            self.website_revert = self.entry_website.get()
-            self.password_revert = self.entry_password.get()
-
-            # Change Buttons - Bind Event and image
-            self.item_copy_button["image"] = images.get_image("save16x16.png")
-            self.item_delete_button["image"] = images.get_image("cross16x16.png")
-            self.item_copy_button["command"] = self.save_changes
-            self.item_delete_button["command"] = self.discard_changes
-            # Edit Button not needed while in Edit-mode
-            self.item_edit_button.grid_remove()
-
-            if self.entry_style == "Item1.TLabel":
-                entry_style = "Item1.TEntry"
-            else:
-                entry_style = "Item2.TEntry"
-
-            # set Focus on Website name and mark entire text
-            self.entry_website.focus_set()
-            self.entry_website.select_range(0, tk.END)
-
-        elif self.state == "normal":
+        if self.state == "normal":
             entry_state = "readonly"  # Entry will not be editable
 
             if self.entry_style == "Item1.TLabel":
@@ -247,6 +229,32 @@ class Item(ttk.Frame):
             self.item_copy_button.grid_remove()
             self.item_delete_button.grid_remove()
             self.item_edit_button.grid_remove()
+
+        else:   # state == edit or create
+            entry_state = "normal"  # Entry will be editable
+
+            # In Case of Edit-Cancel
+            self.website_revert = self.entry_website.get()
+            self.password_revert = self.entry_password.get()
+
+            # Change Buttons - Bind Event and image
+            self.item_copy_button["image"] = images.get_image("save16x16.png")
+            self.item_delete_button["image"] = images.get_image("cross16x16.png")
+            self.item_copy_button["command"] = self.save_changes
+            self.item_delete_button["command"] = self.discard_changes
+            self.item_copy_button.grid(row=self.row_id, column=4)
+            self.item_delete_button.grid(row=self.row_id, column=5)
+            # Edit Button not needed while in Edit-mode
+            self.item_edit_button.grid_remove()
+
+            if self.entry_style == "Item1.TLabel":
+                entry_style = "Item1.TEntry"
+            else:
+                entry_style = "Item2.TEntry"
+
+            # set Focus on Website name and mark entire text
+            self.entry_website.focus_set()
+            self.entry_website.select_range(0, tk.END)
 
         self.entry_website["state"] = self.entry_password["state"] = entry_state
         self.entry_website["style"] = self.entry_password["style"] = entry_style
@@ -347,7 +355,7 @@ class ListFrame(ttk.Frame):
         # Usage of Label because of Styling options
         self.button_add_row = ttk.Label(self.list_frame, image=self.img_btn_add_row, padding="3 3 3 3")
         self.button_add_row.grid(row=ListFrame.row_count+1, column=0, sticky="w", padx=3, pady=3)
-        self.button_add_row.bind("<1>", lambda e: self.add_row("neu", "test123"))
+        self.button_add_row.bind("<1>", lambda e: self.add_row())
         self.button_add_row.bind("<Enter>",
                                  lambda e: ListFrame.mouse_hover_event(self.button_add_row, "MouseEnter.TLabel"))
         self.button_add_row.bind("<Leave>",
@@ -355,11 +363,11 @@ class ListFrame(ttk.Frame):
         self.button_add_row["style"] = "Item2.TLabel"
 
     # Add new Password Line
-    def add_row(self, name, pw, event=None):
+    def add_row(self, event=None):
         row_id = ListFrame.row_count
         self.button_add_row.grid(row=row_id+1)
         # Create new Item and store in List
-        ListFrame.items.append(Item(self.list_frame, self, row_id, name, pw, True, "normal"))
+        ListFrame.items.append(Item(self.list_frame, self, row_id, "", "", True, "create"))
         ListFrame.row_up_count()
         self.list_frame.update()    # Frame needs to be redrawn before updating the Scrollbar region
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))     # Update Scrollbar region
