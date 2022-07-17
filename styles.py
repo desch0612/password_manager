@@ -20,6 +20,7 @@ def load_styles():
     style.configure("Item2.TEntry", background="white")
     style.configure("MouseEnter.TFrame", background="#dddddd")
     style.configure("MouseEnter.TLabel", background="#dddddd")
+    style.configure("OnClick.TLabel", background="#aaaaaa")
 
     # List Frame
     style.configure("List.TFrame", background="white")

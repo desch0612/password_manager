@@ -3,6 +3,7 @@ import tkinter.ttk as ttk   # module for modern-style widgets
 from tkinter import messagebox
 import images
 import db_fetch as dbfetch
+import generic_functions as func
 
 
 # Encapsulates darker colored Frame on the top of the Program
@@ -200,8 +201,7 @@ class Item(ttk.Frame):
         if self.state != "normal":
             if messagebox.askquestion("Discard change", "Save Changes?") == "no":
                 self.discard_changes(event)
-
-            if self.state == "edit":
+            else:
                 self.change_state("normal")
 
     # Changes State of Item
@@ -353,9 +353,10 @@ class ListFrame(ttk.Frame):
 
         # Label will function as a Button
         # Usage of Label because of Styling options
-        self.button_add_row = ttk.Label(self.list_frame, image=self.img_btn_add_row, padding="3 3 3 3")
+        self.button_add_row = ttk.Button(self.list_frame, image=self.img_btn_add_row, command=self.add_row, padding="3 3 3 3")
         self.button_add_row.grid(row=ListFrame.row_count+1, column=0, sticky="w", padx=3, pady=3)
-        self.button_add_row.bind("<1>", lambda e: self.add_row())
+        self.button_add_row.bind("<ButtonPress-1>", lambda e: func.style_change(self.button_add_row, "OnClick.TLabel"))
+        self.button_add_row.bind("<ButtonRelease-1>", lambda e: func.style_change(self.button_add_row, "Item2.TLabel"))
         self.button_add_row.bind("<Enter>",
                                  lambda e: ListFrame.mouse_hover_event(self.button_add_row, "MouseEnter.TLabel"))
         self.button_add_row.bind("<Leave>",
