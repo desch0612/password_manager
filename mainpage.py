@@ -26,9 +26,13 @@ class TopBar(ttk.Frame):
         self.label_title.grid(row=0, column=0, sticky=tk.W, padx=10)
 
         # Buttons
-        # todo: Change to Label for Styling options like Plus-Button in ListFrame
-        ttk.Button(self, image=self.img_setting,
-                   command=self.button_settings_click).grid(row=0, column=1, sticky=tk.E, padx=7, pady=10)
+        self.button_settings = ttk.Button(self, image=self.img_setting, padding="2 2 2 2",
+                                          command=self.button_settings_click, style="Item2.TLabel")
+        self.button_settings.grid(row=0, column=1, sticky=tk.E, padx=7, pady=10)
+        self.button_settings.bind("<ButtonPress-1>", lambda e: func.style_change(self.button_settings, "OnClick.TLabel"))
+        self.button_settings.bind("<ButtonRelease-1>", lambda e: func.style_change(self.button_settings, "Item2.TLabel"))
+        self.button_settings.bind("<Enter>", lambda e: func.style_change(self.button_settings, "MouseEnter.TLabel"))
+        self.button_settings.bind("<Leave>", lambda e: func.style_change(self.button_settings, "Item2.TLabel"))
 
         # Styles
         self["style"] = "Top.TFrame"
@@ -358,9 +362,9 @@ class ListFrame(ttk.Frame):
         self.button_add_row.bind("<ButtonPress-1>", lambda e: func.style_change(self.button_add_row, "OnClick.TLabel"))
         self.button_add_row.bind("<ButtonRelease-1>", lambda e: func.style_change(self.button_add_row, "Item2.TLabel"))
         self.button_add_row.bind("<Enter>",
-                                 lambda e: ListFrame.mouse_hover_event(self.button_add_row, "MouseEnter.TLabel"))
+                                 lambda e: func.style_change(self.button_add_row, "MouseEnter.TLabel"))
         self.button_add_row.bind("<Leave>",
-                                 lambda e: ListFrame.mouse_hover_event(self.button_add_row, "Item2.TLabel"))
+                                 lambda e: func.style_change(self.button_add_row, "Item2.TLabel"))
         self.button_add_row["style"] = "Item2.TLabel"
 
     # Add new Password Line
@@ -395,12 +399,6 @@ class ListFrame(ttk.Frame):
         if self.canvas.yview() == (0.0, 1.0):
             return
         self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
-
-    # Generic Mouse Hover event for ttk Widgets
-    # Change style on Mouse Hover
-    @staticmethod
-    def mouse_hover_event(widget, style, event=None):
-        widget["style"] = style
 
     @staticmethod
     def row_up_count():
