@@ -19,7 +19,7 @@ class TopBar(ttk.Frame):
         self["width"] = 600
         self["height"] = 40
         self["style"] = "Top.TFrame"
-        self.grid(row=0, column=0, sticky=tk.W + tk.E)
+        self.grid(row=0, column=0, sticky="ew")
         self.columnconfigure(0, weight=1)
 
         # Init Widgets
@@ -51,7 +51,7 @@ class Headline(ttk.Frame):
         self.parent = parent
 
         # Set up Frame
-        self.grid(row=1, column=0, padx=5, pady=(5, 0), sticky=tk.E + tk.W)
+        self.grid(row=1, column=0, padx=5, pady=(5, 0), sticky="ew")
         self.columnconfigure(4, weight=1)
 
         # Headlines
@@ -91,7 +91,7 @@ class Item(ttk.Frame):
         self.state = args[4]   # "normal", "edit" or "create"
 
         # Frame Config
-        self.grid(row=self.row_id, column=0, sticky=tk.E + tk.W)
+        self.grid(row=self.row_id, column=0, sticky="ew")
         # Event when losing Focus of Item-Frame - Used for State-Change
         self.bind("<FocusOut>", self.frame_lost_focus)
 
@@ -125,8 +125,8 @@ class Item(ttk.Frame):
         # Place widgets
         self.entry_website.grid(row=self.row_id, column=0, padx=5, pady=5, sticky=tk.W)
         self.entry_password.grid(row=self.row_id, column=2, padx=5, pady=5, sticky=tk.W)
-        self.separator_1.grid(row=self.row_id, column=1, padx=5, sticky=tk.N + tk.S)
-        self.separator_2.grid(row=self.row_id, column=3, padx=5, sticky=tk.N + tk.S)
+        self.separator_1.grid(row=self.row_id, column=1, padx=5, sticky="ns")
+        self.separator_2.grid(row=self.row_id, column=3, padx=5, sticky="ns")
         # Buttons will be put on the grid by the mouse_enter event!
 
         # Widget Bindings
@@ -285,7 +285,14 @@ class Item(ttk.Frame):
     def button_delete_click(self, ask_question):
         # todo: Delete in Database
         if ask_question:
+            # Color Item-Background red during Delete-Confirmation
+            self["style"] = "OnDelete.TFrame"
+            self.entry_website["style"] = "OnDelete.TLabel"
+            self.entry_password["style"] = "OnDelete.TLabel"
+            self.unbind("<Leave>")  # Temporarily unbind Leave-Event, so Item stays red during Delete-Confirmation
             if messagebox.askquestion("Delete Password", f"Delete Password for {self.entry_website.get()}?") == "no":
+                self.bind("<Leave>", self.mouse_leave)  # bind again
+                self.mouse_leave()  # manual leave event to return to normal colors
                 return
         self.delete_item()
 
@@ -327,7 +334,7 @@ class ListFrame(ttk.Frame):
         # Configure Frame
         self["relief"] = tk.GROOVE
         self["padding"] = "2 2 2 2"
-        self.grid(row=2, column=0, padx=5, pady=(0, 5), sticky=tk.N + tk.E + tk.S + tk.W)
+        self.grid(row=2, column=0, padx=5, pady=(0, 5), sticky="nsew")
         self.columnconfigure(0, weight=1)  # Expand widget on Window Resize
         self.rowconfigure(0, weight=1)
 
@@ -448,7 +455,7 @@ class MainPage(ttk.Frame):
         self.parent = parent
 
         # Frame placement and Expand-Behaviour
-        self.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
+        self.grid(row=0, column=0, sticky="nsew")
         # Expand List Frame on Window Resize
         self.columnconfigure(0, weight=1)
         self.rowconfigure(2, weight=1)
