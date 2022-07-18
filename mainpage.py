@@ -119,7 +119,7 @@ class Item(ttk.Frame):
         # Copy Button will change to Save-Changes-Button while in Edit-Mode
         # Delete Button will change to Discard-Changes-Button while in Edit-Mode
         self.item_copy_button = ttk.Button(self, image=self.img_copy, command=self.button_copy_click)
-        self.item_delete_button = ttk.Button(self, image=self.img_delete, command=self.button_delete_click)
+        self.item_delete_button = ttk.Button(self, image=self.img_delete, command=lambda: self.button_delete_click(True))
         self.item_edit_button = ttk.Button(self, image=self.img_edit, command=self.button_edit_click)
 
         # Place widgets
@@ -207,7 +207,7 @@ class Item(ttk.Frame):
             self.change_state("normal")
         # Remove Item if Changes are discarded in Create-Mode
         elif self.state == "create":
-            self.button_delete_click()
+            self.button_delete_click(False)
 
     # if Item loses Focus while in edit-mode, user will be asked if changes should be saved
     def frame_lost_focus(self, event=None):
@@ -239,7 +239,7 @@ class Item(ttk.Frame):
             self.item_copy_button["image"] = images.get_image("kopieren.png")
             self.item_delete_button["image"] = images.get_image("trashcan.png")
             self.item_copy_button["command"] = self.button_copy_click
-            self.item_delete_button["command"] = self.button_delete_click
+            self.item_delete_button["command"] = lambda: self.button_delete_click(True)
             # Re-Place Edit-Button
             self.item_edit_button.grid()
 
@@ -282,14 +282,19 @@ class Item(ttk.Frame):
         self.clipboard_append(self.entry_password.get())
 
     # Copy password to Clipboard
-    def button_delete_click(self):
+    def button_delete_click(self, ask_question):
         # todo: Delete in Database
-        if messagebox.askquestion("Delete Password", f"Delete Password for {self.entry_website.get()}?") == "yes":
-            self.grid_forget()
-            self.destroy()
-            ListFrame.items.remove(self)
-            ListFrame.alternate_colorscheme()
-            # ListFrame.row_down_count()
+        if ask_question:
+            if messagebox.askquestion("Delete Password", f"Delete Password for {self.entry_website.get()}?") == "no":
+                return
+        self.delete_item()
+
+    def delete_item(self):
+        self.grid_forget()
+        self.destroy()
+        ListFrame.items.remove(self)
+        ListFrame.alternate_colorscheme()
+        # ListFrame.row_down_count()
 
     # Copy password to Clipboard
     def button_edit_click(self):
