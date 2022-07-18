@@ -18,26 +18,28 @@ class TopBar(ttk.Frame):
         # Set up placement and size  of the Top Bar
         self["width"] = 600
         self["height"] = 40
+        self["style"] = "Top.TFrame"
         self.grid(row=0, column=0, sticky=tk.W + tk.E)
         self.columnconfigure(0, weight=1)
 
-        # Title
-        self.label_title = ttk.Label(self, text="Password List", font=("", 18))
-        self.label_title.grid(row=0, column=0, sticky=tk.W, padx=10)
-
-        # Buttons
+        # Init Widgets
+        self.label_title = ttk.Label(self, text="Password List", font=("", 18), style="Top.TLabel")
         self.button_settings = ttk.Button(self, image=self.img_setting, padding="2 2 2 2",
                                           command=self.button_settings_click, style="Item2.TLabel")
+
+        # Place widgets
+        self.label_title.grid(row=0, column=0, sticky=tk.W, padx=10)
         self.button_settings.grid(row=0, column=1, sticky=tk.E, padx=7, pady=10)
-        self.button_settings.bind("<ButtonPress-1>", lambda e: func.style_change(self.button_settings, "OnClick.TLabel"))
-        self.button_settings.bind("<ButtonRelease-1>", lambda e: func.style_change(self.button_settings, "Item2.TLabel"))
+
+        # Widgets Bindings
+        self.button_settings.bind("<ButtonPress-1>",
+                                  lambda e: func.style_change(self.button_settings, "OnClick.TLabel"))
+        self.button_settings.bind("<ButtonRelease-1>",
+                                  lambda e: func.style_change(self.button_settings, "Item2.TLabel"))
         self.button_settings.bind("<Enter>", lambda e: func.style_change(self.button_settings, "MouseEnter.TLabel"))
         self.button_settings.bind("<Leave>", lambda e: func.style_change(self.button_settings, "Item2.TLabel"))
 
-        # Styles
-        self["style"] = "Top.TFrame"
-        self.label_title["style"] = "Top.TLabel"
-
+    # Loads Settings-Page
     def button_settings_click(self):
         messagebox.showinfo("Settings", "Button für Einstellungen")
 
@@ -81,10 +83,17 @@ class Item(ttk.Frame):
         self.password = args[2]
         self.used_plus_button = args[3]     # bool: True if item is added manually with Plus Button
 
-        # "normal" -> default State for saved entries
-        # "edit" -> Edit-State when Edit-Button is pressed
-        # "create" -> When Plus-Button is used to add a Row
-        self.state = args[4]   # "normal", "edit" or ""  todo: State maybe has to be put up on ListFrame-Level
+        # Item can have one of these three states:
+        # - "normal": default - Entries not editable
+        # - "edit": when edit button is pressed - Entries in box format and editable
+        # - "create": when new row gets added with Plus-Button
+        #           -> similar to "edit" with special Case: delete row if changes are discarded
+        self.state = args[4]   # "normal", "edit" or "create"
+
+        # Frame Config
+        self.grid(row=self.row_id, column=0, sticky=tk.E + tk.W)
+        # Event when losing Focus of Item-Frame - Used for State-Change
+        self.bind("<FocusOut>", self.frame_lost_focus)
 
         # Item will revert to these variables if edit is cancelled
         self.website_revert = ""
@@ -95,33 +104,38 @@ class Item(ttk.Frame):
         self.img_delete = images.get_image("trashcan.png")
         self.img_edit = images.get_image("bleistift.png")
 
-        # Event when losing Focus of Item-Frame - Used for State-Change
-        self.bind("<FocusOut>", self.frame_lost_focus)
-
         # tk variables for entry fields
         self.entry_val_website = tk.StringVar()
         self.entry_val_website.set(self.website)
         self.entry_val_password = tk.StringVar()
         self.entry_val_password.set(self.password)
 
-        # Entry widgets for row values
+        # Init Entry widgets for row values + Separators
         self.entry_website = ttk.Entry(self, textvariable=self.entry_val_website, state="readonly", width=30)
-        self.entry_website.grid(row=self.row_id, column=0, padx=5, pady=5, sticky=tk.W)
-        ttk.Separator(self, orient="vertical").grid(row=self.row_id, column=1, padx=5, sticky=tk.N + tk.S)
+        self.separator_1 = ttk.Separator(self, orient="vertical")
         self.entry_password = ttk.Entry(self, textvariable=self.entry_val_password, state="readonly", show="*", width=30)
-        self.entry_password.grid(row=self.row_id, column=2, padx=5, pady=5, sticky=tk.W)
-        ttk.Separator(self, orient="vertical").grid(row=self.row_id, column=3, padx=5, sticky=tk.N + tk.S)
-
-        # Entry-Events
-        self.entry_website.bind("<Return>", self.save_changes)
-        self.entry_password.bind("<Return>", self.save_changes)
-
-        # Buttons
+        self.separator_2 = ttk.Separator(self, orient="vertical")
+        # Init Buttons
         # Copy Button will change to Save-Changes-Button while in Edit-Mode
         # Delete Button will change to Discard-Changes-Button while in Edit-Mode
         self.item_copy_button = ttk.Button(self, image=self.img_copy, command=self.button_copy_click)
         self.item_delete_button = ttk.Button(self, image=self.img_delete, command=self.button_delete_click)
         self.item_edit_button = ttk.Button(self, image=self.img_edit, command=self.button_edit_click)
+
+        # Place widgets
+        self.entry_website.grid(row=self.row_id, column=0, padx=5, pady=5, sticky=tk.W)
+        self.entry_password.grid(row=self.row_id, column=2, padx=5, pady=5, sticky=tk.W)
+        self.separator_1.grid(row=self.row_id, column=1, padx=5, sticky=tk.N + tk.S)
+        self.separator_2.grid(row=self.row_id, column=3, padx=5, sticky=tk.N + tk.S)
+        # Buttons will be put on the grid by the mouse_enter event!
+
+        # Widget Bindings
+        # Entry-Events
+        self.entry_website.bind("<Return>", self.save_changes)
+        self.entry_password.bind("<Return>", self.save_changes)
+        # Mouse Hover Events for Item highlighting
+        self.bind('<Enter>', self.mouse_enter)
+        self.bind('<Leave>', self.mouse_leave)
 
         # alternating Colorscheme of the rows
         # if item is added with Plus Button:
@@ -139,7 +153,7 @@ class Item(ttk.Frame):
                 else:
                     self.frame_style = "Item1.TFrame"
                     self.entry_style = "Item1.TLabel"
-        else:
+        else:   # Alternating color with row_id
             if self.row_id % 2 == 1:
                 self.frame_style = "Item2.TFrame"
                 self.entry_style = "Item2.TLabel"
@@ -149,13 +163,6 @@ class Item(ttk.Frame):
 
         # add styling
         self.stylize_item_widgets(self.frame_style, self.entry_style)
-
-        self.grid(row=self.row_id, column=0, sticky=tk.E + tk.W)
-        # self.item_frame.columnconfigure(2, weight=1)
-
-        # Mouse Hover Event
-        self.bind('<Enter>', self.mouse_enter)
-        self.bind('<Leave>', self.mouse_leave)
 
         # Change State if Plus-Button is used
         if self.state == "create":
@@ -168,6 +175,7 @@ class Item(ttk.Frame):
             self.configure(style="MouseEnter.TFrame")
             self.entry_website.configure(style="MouseEnter.TLabel")
             self.entry_password.configure(style="MouseEnter.TLabel")
+            # Place Buttons
             self.item_copy_button.grid(row=self.row_id, column=4)
             self.item_delete_button.grid(row=self.row_id, column=5, padx=5)
             self.item_edit_button.grid(row=self.row_id, column=6, padx=(0, 50))
@@ -179,6 +187,7 @@ class Item(ttk.Frame):
             self.configure(style=self.frame_style)
             self.entry_website.configure(style=self.entry_style)
             self.entry_password.configure(style=self.entry_style)
+            # Hide Buttons
             self.item_copy_button.grid_remove()
             self.item_delete_button.grid_remove()
             self.item_edit_button.grid_remove()
@@ -208,7 +217,11 @@ class Item(ttk.Frame):
             else:
                 self.change_state("normal")
 
-    # Changes State of Item
+    # Changes State of Item into one of these two:
+    # - "normal": default - Entries not editable
+    # - "edit": when edit button is pressed - Entries in box format and editable
+    # - "create": when new row gets added with Plus-Button
+    #    -> similar to "edit" with special Case: delete row if changes are discarded (handled in discard_changes())
     def change_state(self, state):
         self.state = state
 
@@ -262,8 +275,6 @@ class Item(ttk.Frame):
 
         self.entry_website["state"] = self.entry_password["state"] = entry_state
         self.entry_website["style"] = self.entry_password["style"] = entry_style
-
-        #else:   # "normal"
 
     # Copy password to Clipboard
     def button_copy_click(self):
@@ -341,30 +352,30 @@ class ListFrame(ttk.Frame):
         # Create Headline Bar
         self.headline_bar = Headline(self.parent)
 
-        # Styles
-        self.list_frame["style"] = "List.TFrame"
-
         # Create Items
         # Loop sets up items in List format
         # todo: Database fetch of all Password entries
         entries = dbfetch.get_entries()
-
         for entry in entries:
             # Create new Item and store in List
             # self gets passed as second argument as a parent
             ListFrame.items.append(Item(self.list_frame, self, ListFrame.row_count, entry["name"], entry["pw"], False, "normal"))
             ListFrame.row_up_count()
 
-        # Label will function as a Button
-        # Usage of Label because of Styling options
+        # Plus-Button to add a new row
         self.button_add_row = ttk.Button(self.list_frame, image=self.img_btn_add_row, command=self.add_row, padding="3 3 3 3")
         self.button_add_row.grid(row=ListFrame.row_count+1, column=0, sticky="w", padx=3, pady=3)
+        # Change background Color on Mouseclick
         self.button_add_row.bind("<ButtonPress-1>", lambda e: func.style_change(self.button_add_row, "OnClick.TLabel"))
         self.button_add_row.bind("<ButtonRelease-1>", lambda e: func.style_change(self.button_add_row, "Item2.TLabel"))
+        # Change Background Color on Mouse-Hover
         self.button_add_row.bind("<Enter>",
                                  lambda e: func.style_change(self.button_add_row, "MouseEnter.TLabel"))
         self.button_add_row.bind("<Leave>",
                                  lambda e: func.style_change(self.button_add_row, "Item2.TLabel"))
+
+        # Styles
+        self.list_frame["style"] = "List.TFrame"
         self.button_add_row["style"] = "Item2.TLabel"
 
     # Add new Password Line
