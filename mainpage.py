@@ -298,7 +298,6 @@ class Item(ttk.Frame):
 
     # Copy password to Clipboard
     def button_edit_click(self):
-        # todo: functionality for Edit
         self.change_state("edit")
 
     def stylize_item_widgets(self, frame_style, entry_style):
