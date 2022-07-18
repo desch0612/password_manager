@@ -283,13 +283,13 @@ class Item(ttk.Frame):
 
     # Copy password to Clipboard
     def button_delete_click(self):
-        # messagebox.showinfo("Delete-Button", "Delete-Button ID: " + str(self.row_id))
         # todo: Delete in Database
-        self.grid_forget()
-        self.destroy()
-        ListFrame.items.remove(self)
-        ListFrame.alternate_colorscheme()
-        # ListFrame.row_down_count()
+        if messagebox.askquestion("Delete Password", f"Delete Password for {self.entry_website.get()}?") == "yes":
+            self.grid_forget()
+            self.destroy()
+            ListFrame.items.remove(self)
+            ListFrame.alternate_colorscheme()
+            # ListFrame.row_down_count()
 
     # Copy password to Clipboard
     def button_edit_click(self):
