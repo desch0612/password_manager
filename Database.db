@@ -1,0 +1,9 @@
+-- create tables for thte database
+-- SQLite-Skript
+
+-- create the Tables of the database
+Create Table Database.User(
+    ID INTEGER PRIMARY KEY,
+    Password_List INTEGER FOREIGN KEY
+);
+
