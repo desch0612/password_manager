@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk   # module for modern-style widgets
 from tkinter import messagebox
-form sys import platform
+from sys import platform
 import images
 import db_fetch as dbfetch
 import generic_functions as func
