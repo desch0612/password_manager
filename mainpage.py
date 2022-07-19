@@ -410,18 +410,35 @@ class ListFrame(ttk.Frame):
     # self.canvas.bind has no effect
     # Therefore the usage of bind_all - needs to be unbound after Mouse Leave event
     def bind_to_mousewheel(self, event=None):
-        self.canvas.bind_all("<MouseWheel>", self.mousewheel_event)
+        if platform == "win32":     # Windows-System 
+            self.canvas.bind_all("<MouseWheel>", self.mousewheel_event)
+        elif "linux" in platform:   # older versions of python specify major linux versions (linux2, linux3, ...)
+            # Bindings for Up and Down Scroll
+            self.canvas.bind_all("<Button-4>", self.mousewheel_event)
+            self.canvas.bind_all("<Button-5>", self.mousewheel_event)
 
     # Disable Mousewheel bind when Mouse leaves List Frame
     def unbind_to_mousewheel(self, event=None):
-        self.canvas.unbind_all("<MouseWheel>")
+        if platform == "win32":     # Windows-System 
+            self.canvas.unbind_all("<MouseWheel>")
+        elif "linux" in platform:   # older versions of python specify major linux versions (linux2, linux3, ...)
+            # Bindings for Up and Down Scroll
+            self.canvas.unbind_all("<Button-4>")
+            self.canvas.unbind_all("<Button-5>")
 
     # Scrolls List Frame
     def mousewheel_event(self, event):
         # check if Frame is smaller than the canvas - only scroll if false
         if self.canvas.yview() == (0.0, 1.0):
             return
-        self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+        if platform == "win32":     # Windows-System 
+            self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+        elif "linux" in platform:   # older versions of python specify major linux versions (linux2, linux3, ...)
+            # event.delta can't be used on linux system because it is always 0
+            if event.num == 4:  # <Button-4> Downscroll
+                self.canvas.yview_scroll(-1, "units")
+            if event.num == 5:  # <Button-5> Upscroll
+                self.canvas.yview_scroll(+1, "units")
 
     @staticmethod
     def row_up_count():
