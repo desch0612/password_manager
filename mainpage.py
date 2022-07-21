@@ -3,7 +3,7 @@ import tkinter.ttk as ttk   # module for modern-style widgets
 from tkinter import messagebox
 from sys import platform
 import images
-import db_functions as dbfetch
+import db_functions
 import generic_functions as func
 
 
@@ -367,7 +367,7 @@ class ListFrame(ttk.Frame):
         # Create Items
         # Loop sets up items in List format
         # todo: Database fetch of all Password entries
-        entries = dbfetch.get_entries()
+        entries = db_functions.get_entries()
         for entry in entries:
             # Create new Item and store in List
             # self gets passed as second argument as a parent
