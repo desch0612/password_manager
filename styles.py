@@ -1,4 +1,5 @@
 import tkinter.ttk as ttk
+from sys import platform
 
 # Colors
 RED = "#ffaaaa"
@@ -9,6 +10,8 @@ DARKER_GRAY = "#aaaaaa"
 
 def load_styles():
     style = ttk.Style()  # Styling parameter for ttk-Widgets
+    if platform == "darwin":    # Mac OS
+        style.theme_use('default')
 
     # Top Frame
     style.configure("Top.TFrame", background="white")
