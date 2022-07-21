@@ -1,6 +1,7 @@
 import tkinter.ttk as ttk
 from sys import platform
 
+
 # Colors
 RED = "#ffaaaa"
 LIGHT_GRAY = "#eeeeee"
