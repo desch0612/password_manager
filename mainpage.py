@@ -419,7 +419,7 @@ class ListFrame(ttk.Frame):
 
     # Disable Mousewheel bind when Mouse leaves List Frame
     def unbind_to_mousewheel(self, event=None):
-        if platform == "win32":     # Windows-System 
+        if platform == "win32" or platform == "darwin":     # Windows-System or MAC OS
             self.canvas.unbind_all("<MouseWheel>")
         elif "linux" in platform:   # older versions of python specify major linux versions (linux2, linux3, ...)
             # Bindings for Up and Down Scroll
@@ -433,6 +433,8 @@ class ListFrame(ttk.Frame):
             return
         if platform == "win32":     # Windows-System 
             self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+        elif platform == "darwin":  # event.delta doesn't need to be modified on macOS
+            self.canvas.yview_scroll(int(-1 * event.delta), "units")
         elif "linux" in platform:   # older versions of python specify major linux versions (linux2, linux3, ...)
             # event.delta can't be used on linux system because it is always 0
             if event.num == 4:  # <Button-4> Downscroll
