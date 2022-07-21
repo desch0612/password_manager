@@ -3,7 +3,7 @@ import tkinter.ttk as ttk   # module for modern-style widgets
 from tkinter import messagebox
 from sys import platform
 import images
-import db_fetch as dbfetch
+import db_functions as dbfetch
 import generic_functions as func
 
 
