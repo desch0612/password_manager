@@ -410,7 +410,7 @@ class ListFrame(ttk.Frame):
     # self.canvas.bind has no effect
     # Therefore the usage of bind_all - needs to be unbound after Mouse Leave event
     def bind_to_mousewheel(self, event=None):
-        if platform == "win32":     # Windows-System 
+        if platform == "win32" or platform == "darwin":     # Windows-System or MAC OS
             self.canvas.bind_all("<MouseWheel>", self.mousewheel_event)
         elif "linux" in platform:   # older versions of python specify major linux versions (linux2, linux3, ...)
             # Bindings for Up and Down Scroll
