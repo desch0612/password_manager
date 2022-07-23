@@ -100,10 +100,18 @@ class Item(ttk.Frame):
         self.website_revert = ""
         self.password_revert = ""
 
+        # Gets used to decide for Eye-Button image
+        self.pw_is_hidden = True
+
         # load image
+        self.img_transparent = images.get_image("transparent16x16.png")
         self.img_copy = images.get_image("kopieren.png")
         self.img_delete = images.get_image("trashcan.png")
         self.img_edit = images.get_image("bleistift.png")
+        self.img_eye_crossed = images.get_image("eye_crossed16x16.png")
+        self.img_eye_crossed_fill = images.get_image("eye_crossed_fill16x16.png")
+        self.img_eye = images.get_image("eye16x16.png")
+        self.img_eye_fill = images.get_image("eye_fill16x16.png")
 
         # tk variables for entry fields
         self.entry_val_website = tk.StringVar()
@@ -117,8 +125,10 @@ class Item(ttk.Frame):
         self.entry_password = ttk.Entry(self, textvariable=self.entry_val_password, state="readonly", show="*", width=30)
         self.separator_2 = ttk.Separator(self, orient="vertical")
         # Init Buttons
-        # Copy Button will change to Save-Changes-Button while in Edit-Mode
-        # Delete Button will change to Discard-Changes-Button while in Edit-Mode
+        #   Copy Button will change to Save-Changes-Button while in Edit-Mode
+        #   Delete Button will change to Discard-Changes-Button while in Edit-Mode
+        #   Eye-Button gets Transparent Image as a placeholder to not mess with Widget-Placement
+        self.item_eye_button = ttk.Button(self, image=self.img_transparent, command=self.unhide_pw)
         self.item_copy_button = ttk.Button(self, image=self.img_copy, command=self.button_copy_click)
         self.item_delete_button = ttk.Button(self, image=self.img_delete, command=lambda: self.button_delete_click(True))
         self.item_edit_button = ttk.Button(self, image=self.img_edit, command=self.button_edit_click)
@@ -127,7 +137,8 @@ class Item(ttk.Frame):
         self.entry_website.grid(row=self.row_id, column=0, padx=5, pady=5, sticky=tk.W)
         self.entry_password.grid(row=self.row_id, column=2, padx=5, pady=5, sticky=tk.W)
         self.separator_1.grid(row=self.row_id, column=1, padx=5, sticky="ns")
-        self.separator_2.grid(row=self.row_id, column=3, padx=5, sticky="ns")
+        self.item_eye_button.grid(row=self.row_id, column=3)
+        self.separator_2.grid(row=self.row_id, column=4, padx=5, sticky="ns")
         # Buttons will be put on the grid by the mouse_enter event!
 
         # Widget Bindings
@@ -137,6 +148,9 @@ class Item(ttk.Frame):
         # Mouse Hover Events for Item highlighting
         self.bind('<Enter>', self.mouse_enter)
         self.bind('<Leave>', self.mouse_leave)
+        # Eye-Image Highlighting
+        self.item_eye_button.bind("<Enter>", lambda e: self.eye_button_change(hover=True))
+        self.item_eye_button.bind("<Leave>", lambda e: self.eye_button_change(hover=False))
 
         # alternating Colorscheme of the rows
         # if item is added with Plus Button:
@@ -176,10 +190,13 @@ class Item(ttk.Frame):
             self.configure(style="MouseEnter.TFrame")
             self.entry_website.configure(style="MouseEnter.TLabel")
             self.entry_password.configure(style="MouseEnter.TLabel")
+            self.item_eye_button.configure(style="MouseEnter.TLabel")
+            self.eye_button_change(hover=False)     # Change from Transparent to Eye-Symbol
+
             # Place Buttons
-            self.item_copy_button.grid(row=self.row_id, column=4)
-            self.item_delete_button.grid(row=self.row_id, column=5, padx=5)
-            self.item_edit_button.grid(row=self.row_id, column=6, padx=(0, 50))
+            self.item_copy_button.grid(row=self.row_id, column=5)
+            self.item_delete_button.grid(row=self.row_id, column=6, padx=5)
+            self.item_edit_button.grid(row=self.row_id, column=7, padx=(0, 50))
 
     # Event - Mouse leaves Item - return to normal color
     def mouse_leave(self, event=None):
@@ -188,6 +205,7 @@ class Item(ttk.Frame):
             self.configure(style=self.frame_style)
             self.entry_website.configure(style=self.entry_style)
             self.entry_password.configure(style=self.entry_style)
+            self.item_eye_button.configure(style=self.entry_style, image=self.img_transparent)  # Return to Transparent
             # Hide Buttons
             self.item_copy_button.grid_remove()
             self.item_delete_button.grid_remove()
@@ -244,6 +262,7 @@ class Item(ttk.Frame):
             # Re-Place Edit-Button
             self.item_edit_button.grid()
 
+            self.item_eye_button.configure(style=self.entry_style, image=self.img_transparent)
             self.item_copy_button.grid_remove()
             self.item_delete_button.grid_remove()
             self.item_edit_button.grid_remove()
@@ -258,10 +277,12 @@ class Item(ttk.Frame):
             # Change Buttons - Bind Event and image
             self.item_copy_button["image"] = images.get_image("save16x16.png")
             self.item_delete_button["image"] = images.get_image("cross16x16.png")
+
+            self.eye_button_change(hover=False)     # show Eye-Image
             self.item_copy_button["command"] = self.save_changes
             self.item_delete_button["command"] = self.discard_changes
-            self.item_copy_button.grid(row=self.row_id, column=4)
-            self.item_delete_button.grid(row=self.row_id, column=5)
+            self.item_copy_button.grid(row=self.row_id, column=5)
+            self.item_delete_button.grid(row=self.row_id, column=6)
             # Edit Button not needed while in Edit-mode
             self.item_edit_button.grid_remove()
 
@@ -304,6 +325,32 @@ class Item(ttk.Frame):
         ListFrame.alternate_colorscheme()
         # ListFrame.row_down_count()
 
+    def unhide_pw(self):
+        self.entry_password["show"] = ""
+        self.pw_is_hidden = False
+        self.eye_button_change(hover=True)
+
+    def hide_pw(self):
+        self.entry_password["show"] = "*"
+        self.pw_is_hidden = True
+        self.eye_button_change(hover=True)
+
+    # Changes the Image of the Eye-Button, according to the Hiding-State of the password
+    # Fill-variant of Image gets used on Mouse-Hover
+    def eye_button_change(self, hover):
+        if self.pw_is_hidden:
+            self.item_eye_button["command"] = self.unhide_pw
+            if hover:
+                self.item_eye_button["image"] = self.img_eye_fill
+            else:
+                self.item_eye_button["image"] = self.img_eye
+        else:
+            self.item_eye_button["command"] = self.hide_pw
+            if hover:
+                self.item_eye_button["image"] = self.img_eye_crossed_fill
+            else:
+                self.item_eye_button["image"] = self.img_eye_crossed
+
     # Copy password to Clipboard
     def button_edit_click(self):
         self.change_state("edit")
@@ -312,6 +359,7 @@ class Item(ttk.Frame):
         self["style"] = frame_style
         self.entry_website["style"] = entry_style
         self.entry_password["style"] = entry_style
+        self.item_eye_button["style"] = entry_style
 
 
 # Encapsulates objects of Item-class
