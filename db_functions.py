@@ -1,6 +1,6 @@
 # todo: get Password entries with Database fetch
 
-
+import connection_database
 
 def get_entries():
     entry1 = {"id": 1, "name": "Amazon", "pw": "123456"}
@@ -20,5 +20,30 @@ def get_entries():
     return entries
 
 
+# conditions = the password has to be some properties and all properties must be satisfied.
+# example: a password need figures, letters and special characters.
+class password():
+    def __init__(self, length, security_level, condition):
+        self.length = length
+        self.security_level = security_level
+        self.condition = condition
 
+# Insert a new E-Mail and Password. So if we already have a account we create
+# a new password for this user.
+def insert_password():
+    pass
+
+def delete_password():
+    pass
+
+def change_password():
+    pass
+
+# a new user need a new database to create some passwords
+def create_database():
+    pass
+
+# load all passwords from the database
+def fetch_all():
+    pass
 
