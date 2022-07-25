@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.ttk as ttk   # module for modern-style widgets
 from tkinter import messagebox
 from sys import platform
+import webbrowser
 import images
 import db_functions
 import generic_functions as func
@@ -43,6 +44,26 @@ class TopBar(ttk.Frame):
     # Loads Settings-Page
     def button_settings_click(self):
         messagebox.showinfo("Settings", "Button für Einstellungen")
+
+
+class Footer(ttk.Frame):
+    def __init__(self, parent):
+        ttk.Frame.__init__(self, parent)
+        self.parent = parent
+
+        self.grid(row=4, column=0, sticky="we")
+        self.columnconfigure(0, weight=1)
+
+        # GitHub Hyperlink
+        self.label_github_link = tk.Label(self, text="GitHub", font=("", 8), fg="blue", cursor="hand2")
+        self.label_github_link.bind("<Button-1>", lambda e: webbrowser.open_new("https://github.com/desch0612/password_manager"))
+        # Add Underlining on Hover
+        self.label_github_link.bind("<Enter>", lambda e: func.add_font_underline(self.label_github_link, "", 8))
+        self.label_github_link.bind("<Leave>", lambda e: func.remove_font_underline(self.label_github_link, "", 8))
+
+        # Place Widgets
+        self.label_github_link.grid(row=0, column=2, sticky="e", padx=(0, 15))
+        ttk.Separator(self, orient="vertical").grid(row=0, column=1, sticky="nse", padx=15)
 
 
 # Frame for Password List Headlines
@@ -550,3 +571,5 @@ class MainPage(ttk.Frame):
         # Create Sub frames
         self.top_bar = TopBar(self)
         self.list_frame = ListFrame(self)
+        ttk.Separator(self, orient="horizontal").grid(row=3, column=0, sticky="we")     # border-top for Footer
+        self.footer = Footer(self)
