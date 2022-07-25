@@ -353,6 +353,7 @@ class Item(ttk.Frame):
             self["style"] = "OnDelete.TFrame"
             self.entry_website["style"] = "OnDelete.TLabel"
             self.entry_password["style"] = "OnDelete.TLabel"
+            self.item_eye_button["style"] = "OnDelete.TLabel"
             self.unbind("<Leave>")  # Temporarily unbind Leave-Event, so Item stays red during Delete-Confirmation
             if messagebox.askquestion("Delete Password", f"Delete Password for {self.entry_website.get()}?") == "no":
                 self.bind("<Leave>", self.mouse_leave)  # bind again
