@@ -17,6 +17,7 @@ def load_images():
     global glob_img_eye_fill
     global glob_img_eye_crossed
     global glob_img_eye_crossed_fill
+    global glob_img_generate
     glob_img_transparent = tk.PhotoImage(file="icons/transparent16x16.png")
     glob_img_add = tk.PhotoImage(file="icons/plus16x16.png")
     glob_img_settings = tk.PhotoImage(file="icons/einstellungen.png")
@@ -30,6 +31,7 @@ def load_images():
     glob_img_eye_fill = tk.PhotoImage(file="icons/eye_fill16x16.png")
     glob_img_eye_crossed = tk.PhotoImage(file="icons/eye_crossed16x16.png")
     glob_img_eye_crossed_fill = tk.PhotoImage(file="icons/eye_crossed_fill16x16.png")
+    glob_img_generate = tk.PhotoImage(file="icons/generate16x16.png")
 
 
 # returns global image var with specified filename
@@ -47,7 +49,8 @@ def get_image(image):
         "eye16x16.png": glob_img_eye,
         "eye_fill16x16.png": glob_img_eye_fill,
         "eye_crossed16x16.png": glob_img_eye_crossed,
-        "eye_crossed_fill16x16.png": glob_img_eye_crossed_fill
+        "eye_crossed_fill16x16.png": glob_img_eye_crossed_fill,
+        "generate16x16.png": glob_img_generate
     }
     return switch.get(image, glob_img_image_not_found)
 
