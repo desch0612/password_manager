@@ -175,6 +175,8 @@ class Item(ttk.Frame):
         # Entry-Events
         self.entry_website.bind("<Return>", self.save_changes)
         self.entry_password.bind("<Return>", self.save_changes)
+        self.entry_website.bind("<Escape>", self.discard_changes)
+        self.entry_password.bind("<Escape>", self.discard_changes)
         # Mouse Hover Events for Item highlighting
         self.bind('<Enter>', self.mouse_enter)
         self.bind('<Leave>', self.mouse_leave)
