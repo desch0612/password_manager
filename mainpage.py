@@ -6,6 +6,7 @@ import webbrowser
 import images
 import db_functions
 import generic_functions as func
+import generate as gen
 
 
 # Encapsulates darker colored Frame on the top of the Program
@@ -278,10 +279,10 @@ class Item(ttk.Frame):
             # Change Buttons - Bind Event and image
             self.item_copy_button["image"] = images.get_image("kopieren.png")
             self.item_delete_button["image"] = images.get_image("trashcan.png")
+            self.item_edit_button["image"] = images.get_image("bleistift.png")
             self.item_copy_button["command"] = self.button_copy_click
             self.item_delete_button["command"] = lambda: self.button_delete_click(True)
-            # Re-Place Edit-Button
-            self.item_edit_button.grid()
+            self.item_edit_button["command"] = self.button_edit_click
 
             self.item_eye_button.configure(style=self.entry_style, image=self.img_transparent)
             self.item_copy_button.grid_remove()
@@ -296,16 +297,13 @@ class Item(ttk.Frame):
             self.password_revert = self.entry_password.get()
 
             # Change Buttons - Bind Event and image
-            self.item_copy_button["image"] = images.get_image("save16x16.png")
-            self.item_delete_button["image"] = images.get_image("cross16x16.png")
-
+            self.item_copy_button["image"] = images.get_image("generate16x16.png")
+            self.item_delete_button["image"] = images.get_image("save16x16.png")
+            self.item_edit_button["image"] = images.get_image("cross16x16.png")
             self.eye_button_change(hover=False)     # show Eye-Image
-            self.item_copy_button["command"] = self.save_changes
-            self.item_delete_button["command"] = self.discard_changes
-            self.item_copy_button.grid(row=self.row_id, column=5)
-            self.item_delete_button.grid(row=self.row_id, column=6)
-            # Edit Button not needed while in Edit-mode
-            self.item_edit_button.grid_remove()
+            self.item_copy_button["command"] = self.generate_pw
+            self.item_delete_button["command"] = self.save_changes
+            self.item_edit_button["command"] = self.discard_changes
 
             if self.entry_style == "Item1.TLabel":
                 entry_style = "Item1.TEntry"
@@ -323,6 +321,12 @@ class Item(ttk.Frame):
     def button_copy_click(self):
         self.clipboard_clear()
         self.clipboard_append(self.entry_password.get())
+
+    # Replaces Method for Copy-Button on Edit- or Create-State
+    # Generates Random Password with Generator-Object
+    def generate_pw(self):
+        # Access Generator in MainFrame Class
+        self.entry_val_password.set(self.parent.parent.generator.generate_pw())
 
     # Copy password to Clipboard
     def button_delete_click(self, ask_question):
@@ -567,6 +571,9 @@ class MainPage(ttk.Frame):
 
         # Styles
         self["style"] = "Main.TFrame"
+
+        # Create Generator Object for Password-Generator
+        self.generator = gen.Generator()
 
         # Create Sub frames
         self.top_bar = TopBar(self)
