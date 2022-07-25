@@ -2,11 +2,19 @@ import tkinter as tk
 import tkinter.ttk as ttk   # module for modern-style widgets
 from tkinter import messagebox
 from sys import platform
+from enum import Enum
 import webbrowser
 import images
 import db_functions
 import generic_functions as func
 import generate as gen
+
+
+# Enumeration of States for Item-Object
+class State(Enum):
+    DEFAULT = 1
+    EDIT = 2
+    CREATE = 3
 
 
 # Encapsulates darker colored Frame on the top of the Program
@@ -107,11 +115,11 @@ class Item(ttk.Frame):
         self.used_plus_button = args[3]     # bool: True if item is added manually with Plus Button
 
         # Item can have one of these three states:
-        # - "normal": default - Entries not editable
-        # - "edit": when edit button is pressed - Entries in box format and editable
-        # - "create": when new row gets added with Plus-Button
-        #           -> similar to "edit" with special Case: delete row if changes are discarded
-        self.state = args[4]   # "normal", "edit" or "create"
+        # - DEFAULT: default - Entries not editable
+        # - EDIT: when edit button is pressed - Entries in box format and editable
+        # - CREATE: when new row gets added with Plus-Button
+        #           -> similar to EDIT with special Case: delete row if changes are discarded
+        self.state = args[4]   # DEFAULT, EDIT or CREATE (from Enum Class "State")
 
         # Frame Config
         self.grid(row=self.row_id, column=0, sticky="ew")
@@ -202,13 +210,13 @@ class Item(ttk.Frame):
         self.stylize_item_widgets(self.frame_style, self.entry_style)
 
         # Change State if Plus-Button is used
-        if self.state == "create":
-            self.change_state("create")
+        if self.state == State.CREATE:
+            self.change_state(State.CREATE)
 
     # Event - Mouse Hover over Item - highlights row
     def mouse_enter(self, event=None):
         # don't change colors if ListFrame is in edit-mode
-        if self.state == "normal":
+        if self.state == State.DEFAULT:
             self.configure(style="MouseEnter.TFrame")
             self.entry_website.configure(style="MouseEnter.TLabel")
             self.entry_password.configure(style="MouseEnter.TLabel")
@@ -223,7 +231,7 @@ class Item(ttk.Frame):
     # Event - Mouse leaves Item - return to normal color
     def mouse_leave(self, event=None):
         # don't change colors if ListFrame is in edit-mode
-        if self.state == "normal":
+        if self.state == State.DEFAULT:
             self.configure(style=self.frame_style)
             self.entry_website.configure(style=self.entry_style)
             self.entry_password.configure(style=self.entry_style)
@@ -234,39 +242,38 @@ class Item(ttk.Frame):
             self.item_edit_button.grid_remove()
 
     def save_changes(self, event=None):
-        if self.state != "normal":
+        if self.state != State.DEFAULT:
             # todo: Save Changes to Database
-            self.change_state("normal")
+            self.change_state(State.DEFAULT)
 
     # revert to old values
     def discard_changes(self, event=None):
-        if self.state == "edit":
+        if self.state == State.EDIT:
             self.entry_website.delete(0, tk.END)
             self.entry_password.delete(0, tk.END)
             self.entry_website.insert(0, self.website_revert)
             self.entry_password.insert(0, self.password_revert)
-            self.change_state("normal")
-        # Remove Item if Changes are discarded in Create-Mode
-        elif self.state == "create":
+            self.change_state(State.DEFAULT)
+        # Remove Item if Changes are discarded in CREATE-Mode
+        elif self.state == State.CREATE:
             self.button_delete_click(False)
 
     # if Item loses Focus while in edit-mode, user will be asked if changes should be saved
     def frame_lost_focus(self, event=None):
-        if self.state != "normal":
+        if self.state != State.DEFAULT:
             if messagebox.askquestion("Discard change", "Save Changes?") == "no":
                 self.discard_changes(event)
             else:
-                self.change_state("normal")
+                self.change_state(State.DEFAULT)
 
     # Changes State of Item into one of these two:
-    # - "normal": default - Entries not editable
-    # - "edit": when edit button is pressed - Entries in box format and editable
-    # - "create": when new row gets added with Plus-Button
-    #    -> similar to "edit" with special Case: delete row if changes are discarded (handled in discard_changes())
+    # - DEFAULT - Entries not editable
+    # - EDIT: when edit button is pressed - Entries in box format and editable
+    # - CREATE: when new row gets added with Plus-Button
+    #    -> similar to EDIT with special Case: delete row if changes are discarded (handled in discard_changes())
     def change_state(self, state):
         self.state = state
-
-        if self.state == "normal":
+        if self.state == State.DEFAULT:
             entry_state = "readonly"  # Entry will not be editable
 
             if self.entry_style == "Item1.TLabel":
@@ -289,7 +296,7 @@ class Item(ttk.Frame):
             self.item_delete_button.grid_remove()
             self.item_edit_button.grid_remove()
 
-        else:   # state == edit or create
+        else:   # state == EDIT or CREATE
             entry_state = "normal"  # Entry will be editable
 
             # In Case of Edit-Cancel
@@ -304,6 +311,16 @@ class Item(ttk.Frame):
             self.item_copy_button["command"] = self.generate_pw
             self.item_delete_button["command"] = self.save_changes
             self.item_edit_button["command"] = self.discard_changes
+
+            # Place Buttons for new Entry
+            if self.state == State.CREATE:
+                self.item_copy_button.grid(row=self.row_id, column=5)
+                self.item_delete_button.grid(row=self.row_id, column=6, padx=5)
+                self.item_edit_button.grid(row=self.row_id, column=7, padx=(0, 50))
+                self.eye_button_change(hover=False)  # Change from Transparent to Eye-Symbol
+                # Highlight Item
+                self["style"] = "MouseEnter.TFrame"
+                self.item_eye_button["style"] = "MouseEnter.TLabel"
 
             if self.entry_style == "Item1.TLabel":
                 entry_style = "Item1.TEntry"
@@ -322,7 +339,7 @@ class Item(ttk.Frame):
         self.clipboard_clear()
         self.clipboard_append(self.entry_password.get())
 
-    # Replaces Method for Copy-Button on Edit- or Create-State
+    # Replaces Method for Copy-Button on EDIT- or CREATE-State
     # Generates Random Password with Generator-Object
     def generate_pw(self):
         # Access Generator in MainFrame Class
@@ -381,7 +398,7 @@ class Item(ttk.Frame):
 
     # Copy password to Clipboard
     def button_edit_click(self):
-        self.change_state("edit")
+        self.change_state(State.EDIT)
 
     def stylize_item_widgets(self, frame_style, entry_style):
         self["style"] = frame_style
@@ -447,7 +464,7 @@ class ListFrame(ttk.Frame):
         for entry in entries:
             # Create new Item and store in List
             # self gets passed as second argument as a parent
-            ListFrame.items.append(Item(self.list_frame, self, ListFrame.row_count, entry["name"], entry["pw"], False, "normal"))
+            ListFrame.items.append(Item(self.list_frame, self, ListFrame.row_count, entry["name"], entry["pw"], False, State.DEFAULT))
             ListFrame.row_up_count()
 
         # Plus-Button to add a new row
@@ -471,7 +488,7 @@ class ListFrame(ttk.Frame):
         row_id = ListFrame.row_count
         self.button_add_row.grid(row=row_id+1)
         # Create new Item and store in List
-        ListFrame.items.append(Item(self.list_frame, self, row_id, "", "", True, "create"))
+        ListFrame.items.append(Item(self.list_frame, self, row_id, "", "", True, State.CREATE))
         ListFrame.row_up_count()
         self.list_frame.update()    # Frame needs to be redrawn before updating the Scrollbar region
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))     # Update Scrollbar region
