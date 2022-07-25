@@ -9,6 +9,7 @@ class Generator:
         self.setting_lower = True
         self.setting_digits = True
         self.setting_punctuation = True
+        self.setting_punctuation_string = string.punctuation   # Customizable in Settings
         self.setting_length = 15
 
     def generate_pw(self):
@@ -21,6 +22,9 @@ class Generator:
         if self.setting_digits:
             char_set += string.digits
         if self.setting_punctuation:
-            char_set += string.punctuation
+            char_set += self.setting_punctuation_string    # Can be Custom
 
         return "".join([secrets.choice(char_set) for i in range(self.setting_length)])
+
+    def set_punctuation(self, punctuation):
+        self.setting_punctuation_string = punctuation
