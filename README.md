@@ -1,3 +1,3 @@
 # password_manager
 
-Images used from: https://www.flaticon.com/de/uicons
+Images used from: https://www.flaticon.com/uicons
