@@ -317,6 +317,9 @@ class Item(ttk.Frame):
                 self.mouse_leave()  # manual leave event to return to normal colors
                 return
         self.delete_item()
+        self.parent.update()    # Redraw ListFrame before updating Scrollbar
+        self.parent.canvas.configure(scrollregion=self.parent.canvas.bbox("all"))  # Update Scrollbar region
+        self.parent.scrollbar_click_configure()
 
     def delete_item(self):
         self.grid_forget()
@@ -447,12 +450,25 @@ class ListFrame(ttk.Frame):
         ListFrame.row_up_count()
         self.list_frame.update()    # Frame needs to be redrawn before updating the Scrollbar region
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))     # Update Scrollbar region
+        self.scrollbar_click_configure()
 
     # Resizes the Canvas and the window inside
     def canvas_configure(self, event):
         canvas_width = event.width
         self.canvas.itemconfig("frame", width=canvas_width)
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        self.scrollbar_click_configure()
+
+    # This Method enables/disables the functionality to drag the Scrollbar with Mouseclick
+    # if enabled: Leads to weird Behaviour if Content(Password List) is smaller than Canvas:
+    #       -> List will be able to scroll down leaving unwanted Space above first List-Entry
+    # Solution: Drag-Functionality will be disabled if List is smaller than Canvas (and enabled if otherwise)
+    def scrollbar_click_configure(self):
+        # Checks if Scrollbar is both at Top- and Bottom-Position
+        if self.canvas.yview() == (0.0, 1.0):
+            self.scrollbar["command"] = ""
+        else:
+            self.scrollbar["command"] = self.canvas.yview
 
     # Bind Mousewheel to Scrollbar when Mouse enters List Frame
     # self.canvas.bind has no effect
