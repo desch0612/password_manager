@@ -1,6 +1,9 @@
 # todo: get Password entries with Database fetch
-
 import connection_database
+import sqlite3
+db_path = "/Users/dennisschafer/lazydata/Passwort_Manager/pw_manager/Password_Manager_DB.db"
+db_connection = sqlite3.connect(db_path)
+db_cursor = db_connection.cursor()
 
 def get_entries():
     entry1 = {"id": 1, "name": "Amazon", "pw": "123456"}
@@ -19,29 +22,35 @@ def get_entries():
     entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
     return entries
 
+def delete_password():
+    pass
 
-# conditions = the password has to be some properties and all properties must be satisfied.
-# example: a password need figures, letters and special characters.
-class password():
-    def __init__(self, length, security_level, condition):
-        self.length = length
-        self.security_level = security_level
-        self.condition = condition
-
-# Insert a new E-Mail and Password. So if we already have a account we create
-# a new password for this user.
 def insert_password():
     pass
 
-def delete_password():
-    pass
+def delete_User():
+    """"
+    sql_command = DROP TABLE USER;
+    db_cursor.execute(sql_command)
+    """
 
 def change_password():
     pass
 
 # a new user need a new database to create some passwords
 def create_database():
-    pass
+    """"
+    sql_command = CREATE TABLE "User" (
+    "Master_Password"	TEXT,
+	PRIMARY KEY("Master_Password")
+); CREATE TABLE "Hash_List" (
+	"pw_id"	INTEGER,
+	"Website_Name"	TEXT,
+	"Hash_Value"	TEXT,
+	"Security_Level"	INTEGER
+    );
+
+    db_cursor.execute(sql_command)"""
 
 # load all passwords from the database
 def fetch_all():

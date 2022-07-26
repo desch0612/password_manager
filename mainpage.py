@@ -8,6 +8,9 @@ import images
 import db_functions
 import generic_functions as func
 import generate as gen
+import sqlite3
+
+
 
 
 # Enumeration of States for Item-Object
@@ -53,6 +56,7 @@ class TopBar(ttk.Frame):
     # Loads Settings-Page
     def button_settings_click(self):
         messagebox.showinfo("Settings", "Button für Einstellungen")
+
 
 
 class Footer(ttk.Frame):
