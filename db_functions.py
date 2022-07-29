@@ -4,6 +4,8 @@ from connection_database import *
 import sqlite3
 import mainpage
 from mainpage import *
+import os  # includes functions to interact with the file system.
+
 
 
 def get_entries():
@@ -23,16 +25,24 @@ def get_entries():
     entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
     return entries
 
+# load all passwords from the database
+def fetch_all():
+    pass
 
-def insert_values():
+def insert_password():
     sql_statement = "INSERT INTO Hash_List VALUES(100, 'testwebsite', 'fjiejfoiew', 2)"
     db_cursor.execute(sql_statement)
     db_connection.commit()
 
 def create_user():
-    sql_statement = "CREATE TABLE User(Master_Password STRING)"
-    db_cursor.execute(sql_statement)
-    db_connection.commit()
+    # test if the user already created
+    # create a new "user"
+    if not db_path.exists():
+        sql_statement1 = "CREATE TABLE User(Master_Password STRING)"
+        sql_statement2 = "CREATE TABLE Hash_List (pw_id INT, Website_Name STRING, " \
+                         "Hash_Value STRING, Security_Level INT)"
+        db_cursor.execute(sql_statement1, sql_statement2)
+        db_connection.commit()
 
 def change_master_password():
     pass
@@ -49,7 +59,5 @@ def delete_User():
     db_cursor.execute(sql_command)
     db_connection.commit()
 
-# load all passwords from the database
-def fetch_all():
-    pass
+
 
