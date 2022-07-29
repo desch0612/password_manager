@@ -1,14 +1,14 @@
+import images
 import tkinter as tk
 import tkinter.ttk as ttk   # module for modern-style widgets
 from tkinter import messagebox
 from sys import platform
 from enum import Enum
 import webbrowser
-import images
-import db_functions
 import generic_functions as func
 import generate as gen
-import sqlite3
+import db_functions
+from db_functions import *
 
 
 
@@ -232,7 +232,7 @@ class Item(ttk.Frame):
             # Place Buttons
             self.item_copy_button.grid(row=self.row_id, column=5)
             self.item_delete_button.grid(row=self.row_id, column=6, padx=5)
-            self.item_edit_button.grid(row=self.row_id, column=7, padx=(0, 50))
+            self.item_edit_button.grid(row=self.row_id, column=7, padx=(0, 50), command = Insert_password())
 
     # Event - Mouse leaves Item - return to normal color
     def mouse_leave(self, event=None):
