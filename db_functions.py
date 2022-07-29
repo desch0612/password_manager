@@ -7,7 +7,6 @@ from mainpage import *
 import os  # includes functions to interact with the file system.
 
 
-
 def get_entries():
     entry1 = {"id": 1, "name": "Amazon", "pw": "123456"}
     entry2 = {"id": 2, "name": "ebay", "pw": "test123"}
@@ -42,7 +41,7 @@ def fetch_all():
     db_connection.close()
 
 def Insert_password():
-    # test-values.
+    # test values.
     sql_statement = "INSERT INTO Hash_List VALUES(99 , 'TEST_WEBSITE', 'TEST_PASSWORT', 45)"
     db_cursor.execute(sql_statement)
     db_connection.commit()
@@ -63,8 +62,8 @@ def Delete_User():
     if db_path.exists():
         sql_command1 = "DROP TABLE Hash_List WHERE pw_id == Master_Password FROM Table User"
         # todo: connection between User and the Hash-List (which User has to be deleted?)
-        sql_command = "DROP TABLE USER"
-        db_cursor.execute(sql_command)
+        sql_command2 = "DROP TABLE USER"
+        db_cursor.execute(sql_command1, sql_command2)
         db_connection.commit()
         db_connection.close()
     else:
