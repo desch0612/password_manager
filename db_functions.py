@@ -27,37 +27,64 @@ def get_entries():
 
 # load all passwords from the database
 def fetch_all():
-    pass
+    # The variables can used outside of the function.
+    global master_password
+    global pw_id, website_name, hash_value, secuity_level
 
-def insert_password():
-    sql_statement = "INSERT INTO Hash_List VALUES(100, 'testwebsite', 'fjiejfoiew', 2)"
+    # todo: save the data into lists?
+    user_list = []
+    hash_list = []
+
+    sql_statment1 = "SELECT * FROM User"
+    sql_statement2 = "SELECT * FROM Hash_List "
+    db_cursor.execute(sql_statment1, sql_statement2)
+    db_connection.commit()
+    db_connection.close()
+
+def Insert_password():
+    # test-values.
+    sql_statement = "INSERT INTO Hash_List VALUES(99 , 'TEST_WEBSITE', 'TEST_PASSWORT', 45)"
     db_cursor.execute(sql_statement)
     db_connection.commit()
+    db_connection.close()
 
-def create_user():
+def Create_user():
     # test if the user already created
     # create a new "user"
     if not db_path.exists():
-        sql_statement1 = "CREATE TABLE User(Master_Password STRING)"
-        sql_statement2 = "CREATE TABLE Hash_List (pw_id INT, Website_Name STRING, " \
+        sql_statement1 = "CREATE TABLE User(Master_Password STRING PRIMARY KEY)"
+        sql_statement2 = "CREATE TABLE Hash_List (pw_id INT PRIMARY KEY, Website_Name STRING, " \
                          "Hash_Value STRING, Security_Level INT)"
         db_cursor.execute(sql_statement1, sql_statement2)
         db_connection.commit()
+        db_connection.close()
 
-def change_master_password():
+def Delete_User():
+    if db_path.exists():
+        sql_command1 = "DROP TABLE Hash_List WHERE pw_id == Master_Password FROM Table User"
+        # todo: connection between User and the Hash-List (which User has to be deleted?)
+        sql_command = "DROP TABLE USER"
+        db_cursor.execute(sql_command)
+        db_connection.commit()
+        db_connection.close()
+    else:
+        db_connection.close()
+
+def Change_master_password():
     pass
 
-def change_values():
+def Change_password():
     pass
 
-def delete_values():
+def Change_website():
     pass
 
-def delete_User():
-    sql_command1 = "DROP TABLE Hash_List WHERE pw_id == Master_Password FROM Table User"
-    sql_command = "DROP TABLE USER"
-    db_cursor.execute(sql_command)
-    db_connection.commit()
+# delete password/website
+def Delete_values():
+    pass
+
+
+
 
 
 
