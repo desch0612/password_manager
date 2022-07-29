@@ -1,9 +1,10 @@
 # todo: get Password entries with Database fetch
 import connection_database
+from connection_database import *
 import sqlite3
-db_path = "/Users/dennisschafer/lazydata/Passwort_Manager/pw_manager/Password_Manager_DB.db"
-db_connection = sqlite3.connect(db_path)
-db_cursor = db_connection.cursor()
+import mainpage
+from mainpage import *
+
 
 def get_entries():
     entry1 = {"id": 1, "name": "Amazon", "pw": "123456"}
@@ -22,10 +23,12 @@ def get_entries():
     entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
     return entries
 
-def delete_password():
-    pass
-
 def insert_password():
+    sql_statement = "INSERT INTO User VALUES('Test')"
+    db_cursor.execute(sql_statement)
+    db_connection.commit()
+
+def delete_password():
     pass
 
 def delete_User():
