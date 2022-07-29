@@ -30,6 +30,7 @@ def fetch_all():
     global master_password
     global pw_id, website_name, hash_value, secuity_level
 
+    # todo: remove "get_entries"
     # todo: save the data into lists?
     user_list = []
     hash_list = []
