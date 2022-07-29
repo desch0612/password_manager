@@ -30,9 +30,9 @@ def insert_values():
     db_connection.commit()
 
 def create_user():
-        sql_statement = "CREATE TABLE User(Master_Password STRING)"
-        db_cursor.execute(sql_statement)
-        db_connection.commit()
+    sql_statement = "CREATE TABLE User(Master_Password STRING)"
+    db_cursor.execute(sql_statement)
+    db_connection.commit()
 
 def change_master_password():
     pass
@@ -44,6 +44,7 @@ def delete_values():
     pass
 
 def delete_User():
+    sql_command1 = "DROP TABLE Hash_List WHERE pw_id == Master_Password FROM Table User"
     sql_command = "DROP TABLE USER"
     db_cursor.execute(sql_command)
     db_connection.commit()
