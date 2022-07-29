@@ -23,18 +23,19 @@ def get_entries():
     entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
     return entries
 
-def create_user():
-        sql_statement = "CREATE TABLE User( Master_Password STRING)"
-        db_cursor.execute(sql_statement)
-        db_connection.commit()
-
-def change_master_password():
-    pass
 
 def insert_values():
     sql_statement = "INSERT INTO Hash_List VALUES(100, 'testwebsite', 'fjiejfoiew', 2)"
     db_cursor.execute(sql_statement)
     db_connection.commit()
+
+def create_user():
+        sql_statement = "CREATE TABLE User(Master_Password STRING)"
+        db_cursor.execute(sql_statement)
+        db_connection.commit()
+
+def change_master_password():
+    pass
 
 def change_values():
     pass
@@ -43,10 +44,9 @@ def delete_values():
     pass
 
 def delete_User():
-    """"
-    sql_command = DROP TABLE USER;
+    sql_command = "DROP TABLE USER"
     db_cursor.execute(sql_command)
-    """
+    db_connection.commit()
 
 # load all passwords from the database
 def fetch_all():
