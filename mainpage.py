@@ -113,17 +113,18 @@ class Item(ttk.Frame):
     def __init__(self, list_frame, parent, *args):
         ttk.Frame.__init__(self, list_frame)    # Constructor of super-class
         self.parent = parent
-        self.row_id = args[0]
-        self.website = args[1]
-        self.password = args[2]
-        self.used_plus_button = args[3]     # bool: True if item is added manually with Plus Button
+        self.db_id = args[0]
+        self.row_id = args[1]
+        self.website = args[2]
+        self.password = args[3]
+        self.used_plus_button = args[4]     # bool: True if item is added manually with Plus Button
 
         # Item can have one of these three states:
         # - DEFAULT: default - Entries not editable
         # - EDIT: when edit button is pressed - Entries in box format and editable
         # - CREATE: when new row gets added with Plus-Button
         #           -> similar to EDIT with special Case: delete row if changes are discarded
-        self.state = args[4]   # DEFAULT, EDIT or CREATE (from Enum Class "State")
+        self.state = args[5]   # DEFAULT, EDIT or CREATE (from Enum Class "State")
 
         # Frame Config
         self.grid(row=self.row_id, column=0, sticky="ew")
@@ -249,7 +250,12 @@ class Item(ttk.Frame):
 
     def save_changes(self, event=None):
         if self.state != State.DEFAULT:
-            # todo: Save Changes to Database
+            if self.state == State.CREATE:
+                # todo: INSERT Statement (use self.db_id)
+                pass
+            else:   # State.EDIT
+                # todo: UPDATE Statement (use self.db_id)
+                pass
             self.change_state(State.DEFAULT)
 
     # revert to old values
@@ -353,7 +359,6 @@ class Item(ttk.Frame):
 
     # Copy password to Clipboard
     def button_delete_click(self, ask_question):
-        # todo: Delete in Database
         if ask_question:
             # Color Item-Background red during Delete-Confirmation
             self["style"] = "OnDelete.TFrame"
@@ -371,6 +376,7 @@ class Item(ttk.Frame):
         self.parent.scrollbar_click_configure()
 
     def delete_item(self):
+        # <-- todo: DELETE Statement (use self.db_id)
         self.grid_forget()
         self.destroy()
         ListFrame.items.remove(self)
@@ -472,7 +478,7 @@ class ListFrame(ttk.Frame):
             for entry in entries:
                 # Create new Item and store in List
                 # self gets passed as second argument as a parent
-                ListFrame.items.append(Item(self.list_frame, self, ListFrame.row_count, entry["name"], entry["pw"], False, State.DEFAULT))
+                ListFrame.items.append(Item(self.list_frame, self, entry["id"], ListFrame.row_count, entry["website"], entry["password"], False, State.DEFAULT))
                 ListFrame.row_up_count()
 
         # Plus-Button to add a new row
@@ -496,7 +502,9 @@ class ListFrame(ttk.Frame):
         row_id = ListFrame.row_count
         self.button_add_row.grid(row=row_id+1)
         # Create new Item and store in List
-        ListFrame.items.append(Item(self.list_frame, self, row_id, "", "", True, State.CREATE))
+        # todo: get max_id of hashlist Table
+        max_id = 0  # Replace with db_functions.get_max_id()
+        ListFrame.items.append(Item(self.list_frame, self, max_id+1, row_id, "", "", True, State.CREATE))
         ListFrame.row_up_count()
         self.list_frame.update()    # Frame needs to be redrawn before updating the Scrollbar region
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))     # Update Scrollbar region
