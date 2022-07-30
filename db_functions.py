@@ -24,22 +24,26 @@ def get_entries():
     entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
     return entries
 
+
 # load all passwords from the database
 def fetch_all():
     # The variables can used outside of the function.
     global master_password
     global pw_id, website_name, hash_value, secuity_level
 
-    # todo: remove "get_entries"
-    # todo: save the data into lists?
-    user_list = []
     hash_list = []
+    test_list = []
 
-    sql_statment1 = "SELECT * FROM User"
-    sql_statement2 = "SELECT * FROM Hash_List "
-    db_cursor.execute(sql_statment1, sql_statement2)
-    db_connection.commit()
-    db_connection.close()
+    db_cursor.execute("SELECT * FROM Hash_List ")
+
+    for dsatz in db_cursor:
+        hash_list.append(dsatz)
+
+        return hash_list
+
+inhalt = fetch_all()
+print(inhalt)
+
 
 def Insert_password():
     # test values.
@@ -47,6 +51,9 @@ def Insert_password():
     db_cursor.execute(sql_statement)
     db_connection.commit()
     db_connection.close()
+
+def Delete_password():
+    pass
 
 def Create_user():
     # test if the user already created
@@ -70,6 +77,9 @@ def Delete_User():
     else:
         db_connection.close()
 
+
+
+
 def Change_master_password():
     pass
 
@@ -79,9 +89,8 @@ def Change_password():
 def Change_website():
     pass
 
-# delete password/website
-def Delete_values():
-    pass
+
+
 
 
 
