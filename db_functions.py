@@ -6,7 +6,7 @@ import mainpage
 from mainpage import *
 import os  # includes functions to interact with the file system.
 
-""""
+
 def get_entries():
     entry1 = {"id": 1, "name": "Amazon", "pw": "123456"}
     entry2 = {"id": 2, "name": "ebay", "pw": "test123"}
@@ -23,7 +23,7 @@ def get_entries():
 
     entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
     return entries
-"""
+
 # load all passwords from the database
 def fetch_all():
     # The variables can used outside of the function.
