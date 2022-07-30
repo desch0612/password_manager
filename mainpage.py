@@ -468,11 +468,12 @@ class ListFrame(ttk.Frame):
         # Loop sets up items in List format
         # todo: Database fetch of all Password entries
         entries = db_functions.fetch_all()
-        for entry in entries:
-            # Create new Item and store in List
-            # self gets passed as second argument as a parent
-            ListFrame.items.append(Item(self.list_frame, self, ListFrame.row_count, entry["name"], entry["pw"], False, State.DEFAULT))
-            ListFrame.row_up_count()
+        if entries:
+            for entry in entries:
+                # Create new Item and store in List
+                # self gets passed as second argument as a parent
+                ListFrame.items.append(Item(self.list_frame, self, ListFrame.row_count, entry["name"], entry["pw"], False, State.DEFAULT))
+                ListFrame.row_up_count()
 
         # Plus-Button to add a new row
         self.button_add_row = ttk.Button(self.list_frame, image=self.img_btn_add_row, command=self.add_row, padding="3 3 3 3")
