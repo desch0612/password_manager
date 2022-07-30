@@ -251,10 +251,12 @@ class Item(ttk.Frame):
     def save_changes(self, event=None):
         if self.state != State.DEFAULT:
             if self.state == State.CREATE:
-                # todo: INSERT Statement (use self.db_id)
+                # todo: INSERT Statement (use self.db_id,
+                #  get field values with self.entry_website.get() and self.entry_password.get())
                 pass
             else:   # State.EDIT
-                # todo: UPDATE Statement (use self.db_id)
+                # todo: UPDATE Statement (use self.db_id
+                #  get field values with self.entry_website.get() and self.entry_password.get())
                 pass
             self.change_state(State.DEFAULT)
 
