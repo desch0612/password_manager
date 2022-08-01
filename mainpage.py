@@ -505,7 +505,7 @@ class ListFrame(ttk.Frame):
         self.button_add_row.grid(row=row_id+1)
         # Create new Item and store in List
         # todo: get max_id of hashlist Table
-        max_id = 0  # Replace with db_functions.get_max_id()
+        max_id = db_functions.get_maxid()
         ListFrame.items.append(Item(self.list_frame, self, max_id+1, row_id, "", "", True, State.CREATE))
         ListFrame.row_up_count()
         self.list_frame.update()    # Frame needs to be redrawn before updating the Scrollbar region
