@@ -42,13 +42,19 @@ def get_maxid():
 def fetch_all():
     global master_password
     global pw_id, website_name, hash_value, secuity_level
-
     hash_list = {}
     entries = []
 
     db_cursor.execute("SELECT * FROM Hash_List ")
-    values = db_cursor[0]
-    return values
+
+    for value in db_cursor:
+        hash_list["id"] = value[0]
+        hash_list["website"] = value[1]
+        hash_list["password"] = value[2]
+        entries.append(hash_list)
+        hash_list = {}
+    return entries
+
 
 # Adds password to the database.
 def Insert_password():
