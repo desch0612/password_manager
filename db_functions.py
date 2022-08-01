@@ -24,6 +24,18 @@ def get_entries():
     entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
     return entries
 
+def get_maxid():
+    sql_statement = "SELECT MAX(pw_id) FROM Hash_List"
+    db_cursor.execute(sql_statement)
+    id_list = db_cursor.fetchall()
+    max_id = int
+
+    if id_list:
+        value = id_list[0]
+        value = list(value)
+    max_id = value[0]
+    return max_id
+
 # load all passwords from the database
 def fetch_all():
     # The variables can used outside of the function.
@@ -34,29 +46,26 @@ def fetch_all():
     entries = []
 
     db_cursor.execute("SELECT * FROM Hash_List ")
+    inhalt = db_cursor[0]
+    return inhalt
 
-    for element in db_cursor:
-        hash_list["id"] = element[0]
-        hash_list["website"] = element[1]
-        hash_list["password"] = element[2]
-        entries.append(hash_list)
-        hash_list = {}
-        #if element[0] == hash_list["id"]:
-        #    return entries
 
-    # hash_list has the entries with all attributes (id, website, password)
-    #return entries
-
-print(fetch_all())
 
 def Insert_password():
     # test values.
-    sql_statement = "INSERT INTO Hash_List VALUES(99 , 'TEST_WEBSITE', 'TEST_PASSWORT', 45)"
+    sql_statement = "INSERT INTO Hash_List VALUES(102 , 'TEST_WEBSITE', 'TEST_PASSWORT', 45)"
     db_cursor.execute(sql_statement)
     db_connection.commit()
 
-def Delete_password():
+
+
+def delete_password():
     pass
+
+def delete_all_passwords():
+    sql_statement = "DELETE FROM Hash_List"
+    db_cursor.execute(sql_statement)
+    db_connection.commit()
 
 def Create_user():
     # test if the user already created
