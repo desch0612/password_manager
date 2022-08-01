@@ -24,12 +24,14 @@ def get_entries():
     entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
     return entries
 
+# Returns the maximum ID from the Hash_List table with the pw_id attribute.
 def get_maxid():
     sql_statement = "SELECT MAX(pw_id) FROM Hash_List"
     db_cursor.execute(sql_statement)
     id_list = db_cursor.fetchall()
     max_id = int
 
+    # Checks if there are any passwords at all.
     if id_list:
         value = id_list[0]
         value = list(value)
@@ -38,7 +40,6 @@ def get_maxid():
 
 # load all passwords from the database
 def fetch_all():
-    # The variables can used outside of the function.
     global master_password
     global pw_id, website_name, hash_value, secuity_level
 
@@ -46,11 +47,10 @@ def fetch_all():
     entries = []
 
     db_cursor.execute("SELECT * FROM Hash_List ")
-    inhalt = db_cursor[0]
-    return inhalt
+    values = db_cursor[0]
+    return values
 
-
-
+# Adds password to the database.
 def Insert_password():
     # test values.
     sql_statement = "INSERT INTO Hash_List VALUES(102 , 'TEST_WEBSITE', 'TEST_PASSWORT', 45)"
@@ -58,10 +58,11 @@ def Insert_password():
     db_connection.commit()
 
 
-
+# Deletes a password from the database
 def delete_password():
     pass
 
+# Deletes all passwords
 def delete_all_passwords():
     sql_statement = "DELETE FROM Hash_List"
     db_cursor.execute(sql_statement)
@@ -79,6 +80,7 @@ def Create_user():
 
 
 def Delete_User():
+    # Checks if the user is present at all
     if db_path.exists():
         sql_command1 = "DROP TABLE Hash_List WHERE pw_id == Master_Password FROM Table User"
         # todo: connection between User and the Hash-List (which User has to be deleted?)
