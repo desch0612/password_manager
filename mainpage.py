@@ -9,8 +9,6 @@ import generic_functions as func
 import generate as gen
 import db_functions
 from db_functions import *
-import os
-
 
 
 # Enumeration of States for Item-Object
