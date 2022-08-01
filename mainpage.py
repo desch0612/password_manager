@@ -474,8 +474,7 @@ class ListFrame(ttk.Frame):
 
         # Create Items
         # Loop sets up items in List format
-        # todo: Database fetch of all Password entries
-        entries = db_functions.get_entries()
+        entries = db_functions.fetch_all()
         if entries:
             for entry in entries:
                 # Create new Item and store in List
