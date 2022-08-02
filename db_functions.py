@@ -6,7 +6,7 @@ import mainpage
 from mainpage import *
 import os  # includes functions to interact with the file system.
 
-
+'''
 def get_entries():
     entry1 = {"id": 1, "website": "Amazon", "password": "123456"}
     entry2 = {"id": 2, "website": "ebay", "password": "test123"}
@@ -23,6 +23,7 @@ def get_entries():
 
     entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
     return entries
+'''
 
 # Returns the maximum ID from the Hash_List table with the pw_id attribute.
 def get_maxid():
@@ -45,7 +46,7 @@ def fetch_all():
     hash_list = {}
     entries = []
 
-    db_cursor.execute("SELECT * FROM Hash_List ")
+    db_cursor.execute("SELECT * FROM Hash_List")
 
     for value in db_cursor:
         hash_list["id"] = value[0]
@@ -54,7 +55,6 @@ def fetch_all():
         entries.append(hash_list)
         hash_list = {}
     return entries
-
 
 # Adds password to the database.
 def Insert_password():
@@ -66,7 +66,9 @@ def Insert_password():
 
 # Deletes a password from the database
 def delete_password():
-    pass
+    sql_statement = "DELETE FROM Hash_LIST WHERE pw_id =  102"
+    db_cursor.execute(sql_statement)
+    db_connection.commit()
 
 # Deletes all passwords
 def delete_all_passwords():
@@ -74,7 +76,9 @@ def delete_all_passwords():
     db_cursor.execute(sql_statement)
     db_connection.commit()
 
-def Create_user():
+
+
+def create_user():
     # test if the user already created
     # create a new "user"
     if not db_path.exists():
@@ -84,8 +88,7 @@ def Create_user():
         db_cursor.execute(sql_statement1, sql_statement2)
         db_connection.commit()
 
-
-def Delete_User():
+def delete_User():
     # Checks if the user is present at all
     if db_path.exists():
         sql_command1 = "DROP TABLE Hash_List WHERE pw_id == Master_Password FROM Table User"
@@ -97,13 +100,13 @@ def Delete_User():
     else:
         db_connection.close()
 
-def Change_master_password():
+def change_password():
     pass
 
-def Change_password():
+def change_master_password():
     pass
 
-def Change_website():
+def change_website():
     pass
 
 
