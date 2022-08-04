@@ -57,11 +57,12 @@ def fetch_all():
     return entries
 
 # Adds password to the database.
-def Insert_password():
+def Insert_password(zahl1, website, password, zahl2):
     # test values.
-    sql_statement = "INSERT INTO Hash_List VALUES(102 , 'TEST_WEBSITE', 'TEST_PASSWORT', 45)"
+    sql_statement = "INSERT INTO Hash_List (pw_id,Website_Name,Hash_Value,Security_Level) VALUES ('zahl1',website,password,'zahl2')"
     db_cursor.execute(sql_statement)
     db_connection.commit()
+    db_connectio.close()
 
 
 # Deletes a password from the database
@@ -75,8 +76,6 @@ def delete_all_passwords():
     sql_statement = "DELETE FROM Hash_List"
     db_cursor.execute(sql_statement)
     db_connection.commit()
-
-
 
 def create_user():
     # test if the user already created

@@ -231,7 +231,7 @@ class Item(ttk.Frame):
             # Place Buttons
             self.item_copy_button.grid(row=self.row_id, column=5)
             self.item_delete_button.grid(row=self.row_id, column=6, padx=5)
-            self.item_edit_button.grid(row=self.row_id, column=7, padx=(0, 50), command = Insert_password())
+           # self.item_edit_button.grid(row=self.row_id, column=7, padx=(0, 50), command = Insert_password())
 
     # Event - Mouse leaves Item - return to normal color
     def mouse_leave(self, event=None):
@@ -251,7 +251,11 @@ class Item(ttk.Frame):
             if self.state == State.CREATE:
                 # todo: INSERT Statement (use self.db_id,
                 #  get field values with self.entry_website.get() and self.entry_password.get())
-                pass
+                id = None
+                website = self.entry_website.get()
+                password = self.entry_password.get()
+                security_level = None
+                db_functions.Insert_password(id,website,password,security_level)
             else:   # State.EDIT
                 # todo: UPDATE Statement (use self.db_id
                 #  get field values with self.entry_website.get() and self.entry_password.get())
@@ -611,3 +615,4 @@ class MainPage(ttk.Frame):
         self.list_frame = ListFrame(self)
         ttk.Separator(self, orient="horizontal").grid(row=3, column=0, sticky="we")     # border-top for Footer
         self.footer = Footer(self)
+
