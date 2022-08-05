@@ -1,4 +1,3 @@
-# todo: get Password entries with Database fetch
 import connection_database
 import sqlite3
 
@@ -14,7 +13,6 @@ def get_maxid():
         max_id = 0
     else:
         value = id_list[0][0]
-        # value = list(value)
         max_id = value
 
     return max_id

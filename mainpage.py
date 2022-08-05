@@ -256,9 +256,6 @@ class Item(ttk.Frame):
                 security_level = None
                 db_functions.Insert_password(self.db_id, website, password, security_level)
             else:   # State.EDIT
-                # todo: UPDATE Statement (use self.db_id
-                #  get field values with self.entry_website.get() and self.entry_password.get())
-
                 # Check if website was changed
                 if self.entry_website.get() != self.website_revert:
                     website = self.entry_website.get()
@@ -394,7 +391,6 @@ class Item(ttk.Frame):
         self.parent.scrollbar_click_configure()
 
     def delete_item(self):
-        # <-- todo: DELETE Statement (use self.db_id)
         db_functions.delete_password(self.db_id)
         self.grid_forget()
         self.destroy()
