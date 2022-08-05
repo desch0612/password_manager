@@ -382,6 +382,7 @@ class Item(ttk.Frame):
 
     def delete_item(self):
         # <-- todo: DELETE Statement (use self.db_id)
+        db_functions.delete_password(self.db_id)
         self.grid_forget()
         self.destroy()
         ListFrame.items.remove(self)
