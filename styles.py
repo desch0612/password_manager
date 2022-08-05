@@ -5,6 +5,7 @@ from sys import platform
 # Colors
 RED = "#ffaaaa"
 LIGHT_GRAY = "#eeeeee"
+LIGHTER_GRAY = "#f3f3f3"
 DARK_GRAY = "#dddddd"
 DARKER_GRAY = "#aaaaaa"
 
@@ -17,6 +18,9 @@ def load_styles():
     # Top Frame
     style.configure("Top.TFrame", background="white")
     style.configure("Top.TLabel", background="white")
+
+    # Footer
+    style.configure("Footer.TFrame", background=LIGHTER_GRAY)
 
     # Headline Frame
     style.configure("Headline.TFrame", background="white")

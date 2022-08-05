@@ -11,6 +11,9 @@ import db_functions
 
 
 # Enumeration of States for Item-Object
+import styles
+
+
 class State(Enum):
     DEFAULT = 1
     EDIT = 2
@@ -65,7 +68,7 @@ class Footer(ttk.Frame):
         self.columnconfigure(0, weight=1)
 
         # GitHub Hyperlink
-        self.label_github_link = tk.Label(self, text="GitHub", font=("", 8), fg="blue", cursor="hand2")
+        self.label_github_link = tk.Label(self, text="GitHub", font=("", 8), fg="blue", bg=styles.LIGHTER_GRAY, cursor="hand2")
         self.label_github_link.bind("<Button-1>", lambda e: webbrowser.open_new("https://github.com/desch0612/password_manager"))
         # Add Underlining on Hover
         self.label_github_link.bind("<Enter>", lambda e: func.add_font_underline(self.label_github_link, "", 8))
