@@ -8,7 +8,6 @@ import webbrowser
 import generic_functions as func
 import generate as gen
 import db_functions
-from db_functions import *
 
 
 # Enumeration of States for Item-Object
