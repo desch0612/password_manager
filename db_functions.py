@@ -66,15 +66,6 @@ def delete_all_passwords():
     connection_database.db_cursor.execute(sql_statement)
     connection_database.db_connection.commit()
 
-def create_user():
-    # test if the user already created
-    # create a new "user"
-    if not connection_database.db_path.exists():
-        sql_statement1 = "CREATE TABLE User(Master_Password STRING PRIMARY KEY)"
-        sql_statement2 = "CREATE TABLE Hash_List (pw_id INT PRIMARY KEY, Website_Name STRING, " \
-                         "Hash_Value STRING, Security_Level INT)"
-        connection_database.db_cursor.execute(sql_statement1, sql_statement2)
-        connection_database.db_connection.commit()
 
 def delete_User():
     # Checks if the user is present at all
