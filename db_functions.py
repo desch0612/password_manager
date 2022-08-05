@@ -41,8 +41,6 @@ def get_maxid():
 
 # load all passwords from the database
 def fetch_all():
-    global master_password
-    global pw_id, website_name, hash_value, secuity_level
     hash_list = {}
     entries = []
 
