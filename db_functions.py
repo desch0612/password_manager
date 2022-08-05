@@ -43,6 +43,19 @@ def Insert_password(db_id, website, password, security_level):
     connection_database.db_connection.commit()
 
 
+# Updates Password.
+def update_password(db_id, website, password):
+    if website and password:    # both values changed
+        sql_statement = f"UPDATE Hash_List SET Website_Name = '{website}', Hash_Value = '{password}' WHERE pw_id = {db_id}"
+    elif not website and password:  # password was changed
+        sql_statement = f"UPDATE Hash_List SET Hash_Value = '{password}' WHERE pw_id = {db_id}"
+    else:   # website was changed
+        sql_statement = f"UPDATE Hash_List SET Website_Name = '{website}' WHERE pw_id = {db_id}"
+
+    connection_database.db_cursor.execute(sql_statement)
+    connection_database.db_connection.commit()
+
+
 # Deletes a password from the database
 def delete_password(db_id):
     sql_statement = f"DELETE FROM Hash_LIST WHERE pw_id = {db_id}"
@@ -76,9 +89,6 @@ def delete_User():
         connection_database.db_connection.close()
     else:
         connection_database.db_connection.close()
-
-def change_password():
-    pass
 
 def change_master_password():
     pass

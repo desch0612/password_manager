@@ -251,8 +251,6 @@ class Item(ttk.Frame):
     def save_changes(self, event=None):
         if self.state != State.DEFAULT:
             if self.state == State.CREATE:
-                # todo: INSERT Statement (use self.db_id,
-                #  get field values with self.entry_website.get() and self.entry_password.get())
                 website = self.entry_website.get()
                 password = self.entry_password.get()
                 security_level = None
@@ -260,7 +258,22 @@ class Item(ttk.Frame):
             else:   # State.EDIT
                 # todo: UPDATE Statement (use self.db_id
                 #  get field values with self.entry_website.get() and self.entry_password.get())
-                pass
+
+                # Check if website was changed
+                if self.entry_website.get() != self.website_revert:
+                    website = self.entry_website.get()
+                else:   # website was not changed
+                    website = None
+
+                # Check if website was changed
+                if self.entry_password.get() != self.password_revert:
+                    password = self.entry_password.get()
+                else:   # website was not changed
+                    password = None
+
+                if website or password:
+                    db_functions.update_password(self.db_id, website, password)
+
             self.change_state(State.DEFAULT)
 
     # revert to old values
