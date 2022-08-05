@@ -4,9 +4,9 @@ import os.path
 
 # Creates Table for Password Entries if .db File is new
 def create_table():
-    sql_statement2 = "CREATE TABLE Hash_List (pw_id INT PRIMARY KEY, Website_Name STRING, " \
+    sql_statement = "CREATE TABLE Hash_List (pw_id INT PRIMARY KEY, Website_Name STRING, " \
                      "Hash_Value STRING, Security_Level INT)"
-    db_cursor.execute(sql_statement2)
+    db_cursor.execute(sql_statement)
     db_connection.commit()
 
 
