@@ -251,11 +251,10 @@ class Item(ttk.Frame):
             if self.state == State.CREATE:
                 # todo: INSERT Statement (use self.db_id,
                 #  get field values with self.entry_website.get() and self.entry_password.get())
-                id = None
                 website = self.entry_website.get()
                 password = self.entry_password.get()
                 security_level = None
-                db_functions.Insert_password(id,website,password,security_level)
+                db_functions.Insert_password(self.db_id, website, password, security_level)
             else:   # State.EDIT
                 # todo: UPDATE Statement (use self.db_id
                 #  get field values with self.entry_website.get() and self.entry_password.get())
