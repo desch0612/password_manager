@@ -231,7 +231,7 @@ class Item(ttk.Frame):
             # Place Buttons
             self.item_copy_button.grid(row=self.row_id, column=5)
             self.item_delete_button.grid(row=self.row_id, column=6, padx=5)
-           # self.item_edit_button.grid(row=self.row_id, column=7, padx=(0, 50), command = Insert_password())
+            self.item_edit_button.grid(row=self.row_id, column=7, padx=(0, 50))
 
     # Event - Mouse leaves Item - return to normal color
     def mouse_leave(self, event=None):
