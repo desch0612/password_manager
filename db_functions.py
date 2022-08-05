@@ -44,8 +44,8 @@ def Insert_password(db_id, website, password, security_level):
 
 
 # Deletes a password from the database
-def delete_password():
-    sql_statement = "DELETE FROM Hash_LIST WHERE pw_id =  102"
+def delete_password(db_id):
+    sql_statement = f"DELETE FROM Hash_LIST WHERE pw_id = {db_id}"
     connection_database.db_cursor.execute(sql_statement)
     connection_database.db_connection.commit()
 
