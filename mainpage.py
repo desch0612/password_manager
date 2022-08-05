@@ -8,12 +8,10 @@ import webbrowser
 import generic_functions as func
 import generate as gen
 import db_functions
-
-
-# Enumeration of States for Item-Object
 import styles
 
 
+# Enumeration of States for Item-Object
 class State(Enum):
     DEFAULT = 1
     EDIT = 2
@@ -58,7 +56,6 @@ class TopBar(ttk.Frame):
         messagebox.showinfo("Settings", "Button für Einstellungen")
 
 
-
 class Footer(ttk.Frame):
     def __init__(self, parent):
         ttk.Frame.__init__(self, parent)
@@ -66,6 +63,8 @@ class Footer(ttk.Frame):
 
         self.grid(row=4, column=0, sticky="we")
         self.columnconfigure(0, weight=1)
+        # Change Style
+        self["style"] = "Footer.TFrame"
 
         # GitHub Hyperlink
         self.label_github_link = tk.Label(self, text="GitHub", font=("", 8), fg="blue", bg=styles.LIGHTER_GRAY, cursor="hand2")
