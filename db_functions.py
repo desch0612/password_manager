@@ -1,5 +1,5 @@
 import connection_database
-import sqlite3
+import hash_functions
 
 
 # Returns the maximum ID from the Hash_List table with the pw_id attribute.
@@ -31,6 +31,7 @@ def fetch_all():
         entries.append(hash_list)
         hash_list = {}
     return entries
+
 
 # Adds password to the database.
 def Insert_password(db_id, website, password, security_level):
