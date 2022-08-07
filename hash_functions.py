@@ -20,6 +20,7 @@ df['hash_value'] = df['password'].apply(hash_function)
 print(df.head())
 # todo: the hash-value has to be saved in the database.
 
+# This function takes a hash-value and returns the plaintext.
 def plaintext_function(hash_value):
  pass
 
