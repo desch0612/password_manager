@@ -254,7 +254,7 @@ class Item(ttk.Frame):
                 website = self.entry_website.get()
                 password = self.entry_password.get()
                 security_level = None
-                db_functions.Insert_password(self.db_id, website, password, security_level)
+                db_functions.Insert_hash_value(self.db_id, website, password, security_level)
             else:   # State.EDIT
                 # Check if website was changed
                 if self.entry_website.get() != self.website_revert:
