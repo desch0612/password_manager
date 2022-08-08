@@ -4,8 +4,7 @@ and the other function takes a plaintext value and returns a hash value.
 he encryption is to be based on sha-256.
 '''
 import hashlib
-import connection_database
-import db_functions
+
 
 
 # This function takes a plaintext value (password) and returns the hash value.
