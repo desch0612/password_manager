@@ -33,25 +33,13 @@ def fetch_all():
         hash_list = {}
     return entries
 
-
-# Adds password to the database.
-'''
-def Insert_password(db_id, website, password, security_level):
-    # test values.
-    security_level = 1  # set 1 as Testvalue
-    sql_statement = f"INSERT INTO Hash_List (pw_id,Website_Name,Hash_Value,Security_Level) VALUES ({db_id},'{website}','{password}',{security_level})"
-    connection_database.db_cursor.execute(sql_statement)
-    connection_database.db_connection.commit()
-'''
-
+# This function added all information including the hash_value into the database.
 def Insert_hash_value(db_id, website, password, security_level):
     security_level = 1
     hash_value = hash_functions.hash_function(password)
     sql_statement = f"INSERT INTO Hash_List (pw_id,Website_Name,Hash_Value,Security_Level) VALUES ({db_id},'{website}','{hash_value}',{security_level})"
     connection_database.db_cursor.execute(sql_statement)
     connection_database.db_connection.commit()
-
-
 
 # Updates Password.
 def update_password(db_id, website, password):
