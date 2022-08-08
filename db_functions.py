@@ -2,6 +2,7 @@ import connection_database
 import hash_functions
 
 
+
 # Returns the maximum ID from the Hash_List table with the pw_id attribute.
 def get_maxid():
     sql_statement = "SELECT MAX(pw_id) FROM Hash_List"
@@ -34,12 +35,22 @@ def fetch_all():
 
 
 # Adds password to the database.
+'''
 def Insert_password(db_id, website, password, security_level):
     # test values.
     security_level = 1  # set 1 as Testvalue
     sql_statement = f"INSERT INTO Hash_List (pw_id,Website_Name,Hash_Value,Security_Level) VALUES ({db_id},'{website}','{password}',{security_level})"
     connection_database.db_cursor.execute(sql_statement)
     connection_database.db_connection.commit()
+'''
+
+def Insert_hash_value(db_id, website, password, security_level):
+    security_level = 1
+    hash_value = hash_functions.hash_function(password)
+    sql_statement = f"INSERT INTO Hash_List (pw_id,Website_Name,Hash_Value,Security_Level) VALUES ({db_id},'{website}','{hash_value}',{security_level})"
+    connection_database.db_cursor.execute(sql_statement)
+    connection_database.db_connection.commit()
+
 
 
 # Updates Password.
