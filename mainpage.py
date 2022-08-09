@@ -11,6 +11,8 @@ import db_functions
 import styles
 
 
+
+
 # Enumeration of States for Item-Object
 class State(Enum):
     DEFAULT = 1
@@ -253,7 +255,7 @@ class Item(ttk.Frame):
             if self.state == State.CREATE:
                 website = self.entry_website.get()
                 password = self.entry_password.get()
-                security_level = None
+                security_level = 1
                 db_functions.Insert_hash_value(self.db_id, website, password, security_level)
             else:   # State.EDIT
                 # Check if website was changed
