@@ -3,6 +3,7 @@ import hash_functions
 
 
 
+
 # Returns the maximum ID from the Hash_List table with the pw_id attribute.
 def get_maxid():
     sql_statement = "SELECT MAX(pw_id) FROM Hash_List"
@@ -40,6 +41,7 @@ def Insert_hash_value(db_id, website, password, security_level):
     sql_statement = f"INSERT INTO Hash_List (pw_id,Website_Name,Hash_Value,Security_Level) VALUES ({db_id},'{website}','{hash_value}',{security_level})"
     connection_database.db_cursor.execute(sql_statement)
     connection_database.db_connection.commit()
+
 
 # Updates Password.
 def update_password(db_id, website, password):
