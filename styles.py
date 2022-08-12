@@ -44,3 +44,8 @@ def load_styles():
 
     # Main Frame
     style.configure("Main.TFrame", background="white")
+
+    # LoginPage
+    style.configure("Loginbox.TLabel", background=DARK_GRAY)
+    style.configure("Loginbox.TFrame", background=DARK_GRAY)
+    style.configure("Loginbox.TCheckbutton", background=DARK_GRAY)
