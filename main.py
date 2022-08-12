@@ -32,14 +32,14 @@ class MainApplication(ttk.Frame):
 
         # Main Page contains main Window for Password List
         self.main_page = mainpage.MainPage(self.parent)     # todo: Maybe use self instead of root
-        self.login_page = login.LoginPage(self.parent)
+        # self.login_page = login.LoginPage(self.parent)
 
         # Add Main- and Login page to frame collection for switch-ability
         frame_switcher.add_frame("main_page", self.main_page)
-        frame_switcher.add_frame("login_page", self.login_page)
+        # frame_switcher.add_frame("login_page", self.login_page)
 
         # Show Login page
-        self.login_page.tkraise()
+        # self.login_page.tkraise()
 
 
 def main():
