@@ -1,5 +1,6 @@
 import connection_database
 import hash_functions
+import hashlib
 
 
 
@@ -30,10 +31,14 @@ def fetch_all():
         hash_list["id"] = value[0]
         hash_list["website"] = value[1]
         hash_list["password"] = value[2]
+        #m = hashlib.sha256(bytes(value[2], "utf-8"))
+        #hash_list["password"] = m.hexdigest()
+
         entries.append(hash_list)
         hash_list = {}
     return entries
 
+#print(fetch_all())
 # This function added all information including the hash_value into the database.
 def Insert_hash_value(db_id, website, password, security_level):
     security_level = 1

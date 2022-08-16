@@ -5,17 +5,18 @@ he encryption is to be based on sha-256.
 '''
 import hashlib
 
-
 # This function takes a plaintext value (password) and returns the hash value.
 # The hash value is saved as a hexadecimal value.
 def hash_function(password):
  hash_value = hashlib.sha256(password.encode('utf-8')).hexdigest()
  return hash_value
 
-hash_password = hash_function()
 # todo: The hash value must not be displayed for the user but his plaintext password. This must still be changed.
 # This function takes a hash-value and returns the plaintext.
-def plaintext_function(hash_password):
- pass
+
+
+
+
+
 
 
