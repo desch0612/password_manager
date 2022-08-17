@@ -1,8 +1,6 @@
 import connection_database
 import hash_functions
-import hashlib
-
-
+from cryptography.fernet import Fernet
 
 
 # Returns the maximum ID from the Hash_List table with the pw_id attribute.
@@ -24,6 +22,9 @@ def get_maxid():
 def fetch_all():
     hash_list = {}
     entries = []
+    key = Fernet.generate_key()
+    crypter = Fernet(key)
+
 
     connection_database.db_cursor.execute("SELECT * FROM Hash_List")
 
@@ -31,18 +32,17 @@ def fetch_all():
         hash_list["id"] = value[0]
         hash_list["website"] = value[1]
         hash_list["password"] = value[2]
-        #m = hashlib.sha256(bytes(value[2], "utf-8"))
-        #hash_list["password"] = m.hexdigest()
-
+        hash_list["password"] = hash_functions.decrypt(hash_list["password"])
         entries.append(hash_list)
         hash_list = {}
     return entries
 
-#print(fetch_all())
+fetch_all()
+
 # This function added all information including the hash_value into the database.
 def Insert_hash_value(db_id, website, password, security_level):
     security_level = 1
-    hash_value = hash_functions.hash_function(password)
+    hash_value = hash_functions.encrypt(password)
     sql_statement = f"INSERT INTO Hash_List (pw_id,Website_Name,Hash_Value,Security_Level) VALUES ({db_id},'{website}','{hash_value}',{security_level})"
     connection_database.db_cursor.execute(sql_statement)
     connection_database.db_connection.commit()
