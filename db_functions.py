@@ -31,18 +31,17 @@ def fetch_all():
     for value in connection_database.db_cursor:
         hash_list["id"] = value[0]
         hash_list["website"] = value[1]
-        hash_list["password"] = value[2]
-        hash_list["password"] = hash_functions.decrypt(hash_list["password"])
+        hash_list["password"] = hash_functions.decrypt(value[2])
         entries.append(hash_list)
         hash_list = {}
     return entries
 
-fetch_all()
+
 
 # This function added all information including the hash_value into the database.
 def Insert_hash_value(db_id, website, password, security_level):
     security_level = 1
-    hash_value = hash_functions.encrypt(password)
+    hash_value = hash_functions.encrypt()
     sql_statement = f"INSERT INTO Hash_List (pw_id,Website_Name,Hash_Value,Security_Level) VALUES ({db_id},'{website}','{hash_value}',{security_level})"
     connection_database.db_cursor.execute(sql_statement)
     connection_database.db_connection.commit()
