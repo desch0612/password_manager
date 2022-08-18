@@ -25,7 +25,6 @@ def fetch_all():
     key = Fernet.generate_key()
     crypter = Fernet(key)
 
-
     connection_database.db_cursor.execute("SELECT * FROM Hash_List")
 
     for value in connection_database.db_cursor:
@@ -41,10 +40,13 @@ def fetch_all():
 # This function added all information including the hash_value into the database.
 def Insert_hash_value(db_id, website, password, security_level):
     security_level = 1
-    hash_value = hash_functions.encrypt()
+    print(password)
+    hash_value = hash_functions.encrypt(password)
+    print(str(hash_value))
     sql_statement = f"INSERT INTO Hash_List (pw_id,Website_Name,Hash_Value,Security_Level) VALUES ({db_id},'{website}','{hash_value}',{security_level})"
     connection_database.db_cursor.execute(sql_statement)
     connection_database.db_connection.commit()
+    return hash_value
 
 
 # Updates Password.
@@ -71,7 +73,6 @@ def delete_all_passwords():
     sql_statement = "DELETE FROM Hash_List"
     connection_database.db_cursor.execute(sql_statement)
     connection_database.db_connection.commit()
-
 
 def delete_User():
     # Checks if the user is present at all
