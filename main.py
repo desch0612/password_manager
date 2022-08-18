@@ -20,7 +20,7 @@ class MainApplication(ttk.Frame):
 
         # Set up Window Attributes
         self.parent.title("Password Manager")
-        self.parent.minsize(width=600, height=400)
+        self.parent.minsize(width=800, height=500)
         self.parent.rowconfigure(0, weight=1)
         self.parent.columnconfigure(0, weight=1)
 
