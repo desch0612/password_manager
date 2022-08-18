@@ -25,6 +25,7 @@ def fetch_all():
     key = Fernet.generate_key()
     crypter = Fernet(key)
 
+
     connection_database.db_cursor.execute("SELECT * FROM Hash_List")
 
     for value in connection_database.db_cursor:
@@ -40,13 +41,10 @@ def fetch_all():
 # This function added all information including the hash_value into the database.
 def Insert_hash_value(db_id, website, password, security_level):
     security_level = 1
-    print(password)
-    hash_value = hash_functions.encrypt(password)
-    print(str(hash_value))
+    hash_value = hash_functions.encrypt()
     sql_statement = f"INSERT INTO Hash_List (pw_id,Website_Name,Hash_Value,Security_Level) VALUES ({db_id},'{website}','{hash_value}',{security_level})"
     connection_database.db_cursor.execute(sql_statement)
     connection_database.db_connection.commit()
-    return hash_value
 
 
 # Updates Password.
@@ -73,6 +71,26 @@ def delete_all_passwords():
     sql_statement = "DELETE FROM Hash_List"
     connection_database.db_cursor.execute(sql_statement)
     connection_database.db_connection.commit()
+
+
+def check_table_existence(tbl):
+    sql_statement = f"SELECT name FROM sqlite_master WHERE type='table' AND name='{tbl}';"
+    connection_database.db_cursor.execute(sql_statement)
+
+    if connection_database.db_cursor.fetchone() is not None:
+        # table exists
+        return True
+    else:   # table doesn't exists
+        return False
+
+
+def create_user_table(mp):
+    sql_statement = "CREATE TABLE User (master_password TEXT PRIMARY KEY)"
+    connection_database.db_cursor.execute(sql_statement)
+    sql_statement = f"INSERT INTO User VALUES ('{mp}')"
+    connection_database.db_cursor.execute(sql_statement)
+    connection_database.db_connection.commit()
+
 
 def delete_User():
     # Checks if the user is present at all
