@@ -104,6 +104,7 @@ class RegisterBox(ttk.Frame):
         # Key events for Enter-Button
         self.register_button.bind("<Return>", lambda e: self.register_master_password())
         self.entry_pw.bind("<Return>", lambda e: self.register_master_password())
+        self.entry_pw_confirm.bind("<Return>", lambda e: self.register_master_password())
 
     def register_master_password(self):
         mp = self.entry_pw.get()
