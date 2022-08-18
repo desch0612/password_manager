@@ -7,12 +7,13 @@ from cryptography.fernet import Fernet
 
 # This function takes a plaintext value (password) and returns the hash value.
 # The hash value is saved as a hexadecimal value.
-def encrypt():
-    key = Fernet.generate_key()
+def encrypt(password):
+    key = Fernet.generate_key() # generates the key.
+    encoded_password = password.encode()
     crypter = Fernet(key)
-    crypted_string = crypter.encrypt(b'password')
+    crypted_string = crypter.encrypt(encoded_password)
+    return crypted_string.decode('utf-8') # convert the hash value into a string!
 
-    return crypted_string
 
 
 # todo: The hash value must not be displayed for the user but his plaintext password. This must still be changed.
