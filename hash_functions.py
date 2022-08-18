@@ -12,7 +12,7 @@ def encrypt(password):
     encoded_password = password.encode()
     crypter = Fernet(key)
     crypted_string = crypter.encrypt(encoded_password)
-    return crypted_string.decode('utf-8')
+    return crypted_string.decode('utf-8') # convert the hash value into a string!
 
 
 
