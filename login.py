@@ -55,7 +55,7 @@ class LoginBox(ttk.Frame):
     def validate_master_password(self):
         if self.checkbox_ignore_value.get():
             frame_switcher.switch_frame("main_page")
-        elif self.entry_pw.get() == "123456":
+        elif self.entry_pw.get() == "123456":   # todo: get master password from database
             frame_switcher.switch_frame("main_page")
         else:
             messagebox.showerror("Incorrect Password", "Password is incorrect")
