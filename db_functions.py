@@ -73,6 +73,25 @@ def delete_all_passwords():
     connection_database.db_connection.commit()
 
 
+def check_table_existence(tbl):
+    sql_statement = f"SELECT name FROM sqlite_master WHERE type='table' AND name='{tbl}';"
+    connection_database.db_cursor.execute(sql_statement)
+
+    if connection_database.db_cursor.fetchone() is not None:
+        # table exists
+        return True
+    else:   # table doesn't exists
+        return False
+
+
+def create_user_table(mp):
+    sql_statement = "CREATE TABLE User (master_password TEXT PRIMARY KEY)"
+    connection_database.db_cursor.execute(sql_statement)
+    sql_statement = f"INSERT INTO User VALUES ('{mp}')"
+    connection_database.db_cursor.execute(sql_statement)
+    connection_database.db_connection.commit()
+
+
 def delete_User():
     # Checks if the user is present at all
     if connection_database.db_path.exists():
