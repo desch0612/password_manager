@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+from tkinter import messagebox
 import frame_switcher
 
 
@@ -46,8 +47,21 @@ class LoginBox(ttk.Frame):
         self.login_button.grid(row=2, column=0, padx=10)
         self.checkbox_ignore.grid(row=3, column=0, padx=10, pady=10)
 
+        # Key events for Enter-Button
+        self.login_button.bind("<Return>", lambda e: self.validate_master_password())
+        self.entry_pw.bind("<Return>", lambda e: self.validate_master_password())
+        self.checkbox_ignore.bind("<Return>", lambda e: self.toggle_checkbox())
+
     def validate_master_password(self):
         if self.checkbox_ignore_value.get():
             frame_switcher.switch_frame("main_page")
         elif self.entry_pw.get() == "123456":
             frame_switcher.switch_frame("main_page")
+        else:
+            messagebox.showerror("Incorrect Password", "Password is incorrect")
+
+    def toggle_checkbox(self):
+        if self.checkbox_ignore_value.get():
+            self.checkbox_ignore_value.set(0)
+        else:
+            self.checkbox_ignore_value.set(1)
