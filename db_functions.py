@@ -92,6 +92,13 @@ def create_user_table(mp):
     connection_database.db_connection.commit()
 
 
+def fetch_mp():
+    sql_statement = "SELECT master_password FROM User"
+    connection_database.db_cursor.execute(sql_statement)
+
+    return connection_database.db_cursor.fetchone()[0]
+
+
 def delete_User():
     # Checks if the user is present at all
     if connection_database.db_path.exists():
