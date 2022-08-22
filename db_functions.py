@@ -22,9 +22,6 @@ def get_maxid():
 def fetch_all():
     hash_list = {}
     entries = []
-    key = Fernet.generate_key()
-    crypter = Fernet(key)
-
 
     connection_database.db_cursor.execute("SELECT * FROM Hash_List")
 
@@ -41,7 +38,7 @@ def fetch_all():
 # This function added all information including the hash_value into the database.
 def Insert_hash_value(db_id, website, password, security_level):
     security_level = 1
-    hash_value = hash_functions.encrypt()
+    hash_value = hash_functions.encrypt(password)
     sql_statement = f"INSERT INTO Hash_List (pw_id,Website_Name,Hash_Value,Security_Level) VALUES ({db_id},'{website}','{hash_value}',{security_level})"
     connection_database.db_cursor.execute(sql_statement)
     connection_database.db_connection.commit()
@@ -103,7 +100,6 @@ def delete_User():
     # Checks if the user is present at all
     if connection_database.db_path.exists():
         sql_command1 = "DROP TABLE Hash_List WHERE pw_id == Master_Password FROM Table User"
-        # todo: connection between User and the Hash-List (which User has to be deleted?)
         sql_command2 = "DROP TABLE USER"
         connection_database.db_cursor.execute(sql_command1, sql_command2)
         connection_database.db_connection.commit()
