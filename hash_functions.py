@@ -28,6 +28,7 @@ def decrypt(crypted_string):
     crypter = Fernet(key)
     crypted_string = crypter.encrypt(bytes(crypted_string, 'utf-8'))
     decrypted_string = crypter.decrypt(crypted_string)
+
     return decrypted_string
 
 

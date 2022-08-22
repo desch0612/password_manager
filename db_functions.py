@@ -31,6 +31,7 @@ def fetch_all():
         hash_list["password"] = hash_functions.decrypt(value[2])
         entries.append(hash_list)
         hash_list = {}
+
     return entries
 
 
