@@ -24,15 +24,15 @@ def encrypt(password):
     crypted_string = crypter.encrypt(encoded_password)
     return crypted_string.decode('utf-8') # convert the hash value into a string!
 
+
 # todo: The hash value must not be displayed for the user but his plaintext password. This must still be changed.
 # This function takes a hash-value and returns the plaintext.
-def decrypt(crypted_string):
+def decrypt(encrypted_password):
     key = load_key()
     crypter = Fernet(key)
-    crypted_string = crypter.encrypt(bytes(crypted_string, 'utf-8'))
-    decrypted_string = crypter.decrypt(crypted_string)
+    decrypted_password = crypter.decrypt(encrypted_password)
 
-    return decrypted_string.decode()
+    return decrypted_password
 
 
 

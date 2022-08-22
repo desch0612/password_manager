@@ -35,7 +35,6 @@ def fetch_all():
     return entries
 
 
-
 # This function added all information including the hash_value into the database.
 def Insert_hash_value(db_id, website, password, security_level):
     security_level = 1
