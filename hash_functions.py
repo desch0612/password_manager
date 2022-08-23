@@ -22,18 +22,21 @@ def encrypt(password):
     encoded_password = password.encode()
     crypter = Fernet(key)
     crypted_string = crypter.encrypt(encoded_password)
+
     return crypted_string.decode('utf-8') # convert the hash value into a string!
 
 
 # todo: The hash value must not be displayed for the user but his plaintext password. This must still be changed.
 # This function takes a hash-value and returns the plaintext.
 def decrypt(encrypted_password):
+    bytes_encrypted_password = bytes(encrypted_password, 'UTF-8')
+    print(bytes_encrypted_password)
+
     key = load_key()
     crypter = Fernet(key)
     decrypted_password = crypter.decrypt(encrypted_password)
 
-    return decrypted_password
-
+    return bytes_encrypted_password
 
 
 
