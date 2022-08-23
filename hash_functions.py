@@ -5,7 +5,6 @@ and the other function takes a plaintext value and returns a hash value.
 
 from cryptography.fernet import Fernet
 
-# todo: outsource the generate key from the encrypt function. (Then we have the same key to encrypt and decrypt)
 # Generates a key and save it into a file
 def generatekey():
     key = Fernet.generate_key()
@@ -22,17 +21,15 @@ def encrypt(password):
     encoded_password = password.encode()
     crypter = Fernet(key)
     crypted_string = crypter.encrypt(encoded_password)
+    return crypted_string.decode('utf-8')
 
-    return crypted_string.decode('utf-8') # convert the hash value into a string!
 
-
-# This function takes a hash-value and returns the plaintext.
+# decrypt the the crypted string
 def decrypt(encrypted_password):
     bytes_encrypted_password = bytes(encrypted_password, 'UTF-8')
     key = load_key()
     crypter = Fernet(key)
     plaintext_Value = crypter.decrypt(bytes_encrypted_password)
-
     return plaintext_Value
 
 
