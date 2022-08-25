@@ -23,8 +23,7 @@ def encrypt(password):
     crypted_string = crypter.encrypt(encoded_password)
     return crypted_string.decode('utf-8')
 
-
-# decrypt the the crypted string
+# decrypt the crypted string
 def decrypt(encrypted_password):
     bytes_encrypted_password = bytes(encrypted_password, 'UTF-8')
     key = load_key()
