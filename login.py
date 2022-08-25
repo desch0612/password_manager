@@ -61,6 +61,9 @@ class LoginBox(ttk.Frame):
         self.entry_pw.bind("<Return>", lambda e: self.validate_master_password())
         self.checkbox_ignore.bind("<Return>", lambda e: self.toggle_checkbox())
 
+        # set focus on entry
+        self.entry_pw.focus_set()
+
     def validate_master_password(self):
         if self.checkbox_ignore_value.get():
             frame_switcher.switch_frame("main_page")
@@ -105,6 +108,9 @@ class RegisterBox(ttk.Frame):
         self.register_button.bind("<Return>", lambda e: self.register_master_password())
         self.entry_pw.bind("<Return>", lambda e: self.register_master_password())
         self.entry_pw_confirm.bind("<Return>", lambda e: self.register_master_password())
+
+        # set focus on entry
+        self.entry_pw.focus_set()
 
     def register_master_password(self):
         mp = self.entry_pw.get()
