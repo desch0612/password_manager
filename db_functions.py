@@ -112,11 +112,7 @@ def delete_User():
     else:
         connection_database.db_connection.close()
 
-def change_master_password():
-    pass
 
-def change_website():
-    pass
 
 
 
