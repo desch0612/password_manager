@@ -27,6 +27,7 @@ class TopBar(ttk.Frame):
 
         # load image
         self.img_setting = images.get_image("einstellungen.png")
+        self.img_signout = images.get_image("signout16x16.png")
 
         # Set up placement and size  of the Top Bar
         self["width"] = 600
@@ -37,7 +38,7 @@ class TopBar(ttk.Frame):
 
         # Init Widgets
         self.label_title = ttk.Label(self, text="Password List", font=("", 18), style="Top.TLabel")
-        self.button_logout = ttk.Button(self, image=self.img_setting, padding="2 2 2 2",
+        self.button_logout = ttk.Button(self, image=self.img_signout, padding="2 2 2 2",
                                           command=lambda: frame_switcher.switch_frame("login_page"), style="Item2.TLabel")
         self.button_settings = ttk.Button(self, image=self.img_setting, padding="2 2 2 2",
                                           command=self.button_settings_click, style="Item2.TLabel")
