@@ -3,6 +3,7 @@ import tkinter.ttk as ttk
 from tkinter import messagebox
 import frame_switcher
 import db_functions
+import hashlib
 
 
 # encapsulates entire Login-window
@@ -114,13 +115,12 @@ class RegisterBox(ttk.Frame):
 
     def register_master_password(self):
         mp = self.entry_pw.get()
-
+        hashed_mp = hashlib.sha256(mp.encode()).hexdigest()
         if mp:
             # password entry is not empty
             # check for confirmation match
             if self.entry_pw.get() == self.entry_pw_confirm.get():
-                # todo: hash master_password
-                db_functions.create_user_table(mp)
+                db_functions.create_user_table(hashed_mp)
                 frame_switcher.switch_frame("main_page")
             else:
                 messagebox.showerror("Master password", "Confirm doesn't match entered password")

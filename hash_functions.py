@@ -5,7 +5,7 @@ and the other function takes a plaintext value and returns a hash value.
 
 from cryptography.fernet import Fernet
 
-# Generates a key and save it into a file
+# Generates a key and save it into a file (secret.key)
 def generatekey():
     key = Fernet.generate_key()
     with open("secret.key", "wb") as key_file:
