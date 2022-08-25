@@ -3,6 +3,7 @@ import tkinter.ttk as ttk
 from tkinter import messagebox
 import frame_switcher
 import db_functions
+import config
 import hashlib
 
 
@@ -32,6 +33,17 @@ class LoginPage(ttk.Frame):
         # Place box in the center of the screen
         self.box.place(relx=0.5, rely=0.5, anchor="center")
 
+    # gets called when frame is switched to login_page in frame_switcher.py
+    def show_frame(self):
+        # show login page instead of registration page if user logs out after registration
+        if type(self.box).__name__ == "RegisterBox":
+            self.box.place_forget()
+            self.box.destroy()
+            self.box = LoginBox(self)
+            self.box.place(relx=0.5, rely=0.5, anchor="center")     # re-place login box
+
+        self.box.entry_pw.delete(0, "end")
+
 
 # holds Login entry-fields and buttons
 class LoginBox(ttk.Frame):
@@ -48,8 +60,8 @@ class LoginBox(ttk.Frame):
         self.entry_pw = ttk.Entry(self, textvariable=self.entry_pw_value, width=30, show="*")
         self.login_button = ttk.Button(self, text="Login", command=self.validate_master_password)
         self.checkbox_ignore_value = tk.IntVar(value=0)  # Variable for Checkbox
-        self.checkbox_autologin_value = tk.IntVar(value=0)  # Variable for Checkbox
-        self.checkbox_autologin = ttk.Checkbutton(self, text="Automatic login",
+        self.checkbox_autologin_value = tk.IntVar(value=int(config.read_value("LOGIN", "AutomaticLogin")))  # Variable for Checkbox
+        self.checkbox_autologin = ttk.Checkbutton(self, text="Automatic login", command=self.update_automatic_login,
                                                variable=self.checkbox_autologin_value, style="Loginbox.TCheckbutton")
         self.checkbox_ignore = ttk.Checkbutton(self, text="Debug: Ignore password validation",
                                                variable=self.checkbox_ignore_value, style="Loginbox.TCheckbutton")
@@ -64,27 +76,43 @@ class LoginBox(ttk.Frame):
         # Key events for Enter-Button
         self.login_button.bind("<Return>", lambda e: self.validate_master_password())
         self.entry_pw.bind("<Return>", lambda e: self.validate_master_password())
-        self.checkbox_ignore.bind("<Return>", lambda e: self.toggle_checkbox(self.checkbox_ignore_value))
-        self.checkbox_autologin.bind("<Return>", lambda e: self.toggle_checkbox(self.checkbox_autologin_value))
+        self.checkbox_ignore.bind("<Return>", lambda e: self.toggle_ignore_validation())
+        self.checkbox_autologin.bind("<Return>", lambda e: self.toggle_automatic_login())
 
         # set focus on entry
         self.entry_pw.focus_set()
 
-
     def validate_master_password(self):
         if self.checkbox_ignore_value.get():
+            # Check if autologin value in config needs to be changed
+            if self.checkbox_autologin_value.get() != int(config.read_value("LOGIN", "AutomaticLogin")):
+                config.change_value("LOGIN", "AutomaticLogin", str(self.checkbox_autologin_value.get()))
             frame_switcher.switch_frame("main_page")
         elif hashlib.sha256(self.entry_pw.get().encode()).hexdigest() == db_functions.fetch_mp():
+            # Check if autologin value in config needs to be changed
+            if self.checkbox_autologin_value.get() != int(config.read_value("LOGIN", "AutomaticLogin")):
+                config.change_value("LOGIN", "AutomaticLogin", str(self.checkbox_autologin_value.get()))
             frame_switcher.switch_frame("main_page")
+
         else:
             messagebox.showerror("Incorrect Password", "Password is incorrect")
 
-    @staticmethod
-    def toggle_checkbox(checkbox):
-        if checkbox.get():
-            checkbox.set(0)
+    def toggle_automatic_login(self):
+        if self.checkbox_autologin_value.get():
+            self.checkbox_autologin_value.set(0)
         else:
-            checkbox.set(1)
+            self.checkbox_autologin_value.set(1)
+
+    # instant change only when automatic login is deactivated
+    def update_automatic_login(self):
+        if not self.checkbox_autologin_value.get():
+            config.change_value("LOGIN", "AutomaticLogin", "0")
+
+    def toggle_ignore_validation(self):
+        if self.checkbox_ignore_value.get():
+            self.checkbox_ignore_value.set(0)
+        else:
+            self.checkbox_ignore_value.set(1)
 
 
 # holds Login entry-fields and buttons
