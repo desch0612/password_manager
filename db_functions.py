@@ -1,7 +1,7 @@
 import connection_database
 import hash_functions
 import os.path
-from cryptography.fernet import Fernet
+
 
 
 # Returns the maximum ID from the Hash_List table with the pw_id attribute.
