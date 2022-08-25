@@ -48,6 +48,9 @@ class LoginBox(ttk.Frame):
         self.entry_pw = ttk.Entry(self, textvariable=self.entry_pw_value, width=30, show="*")
         self.login_button = ttk.Button(self, text="Login", command=self.validate_master_password)
         self.checkbox_ignore_value = tk.IntVar(value=0)  # Variable for Checkbox
+        self.checkbox_autologin_value = tk.IntVar(value=0)  # Variable for Checkbox
+        self.checkbox_autologin = ttk.Checkbutton(self, text="Automatic login",
+                                               variable=self.checkbox_autologin_value, style="Loginbox.TCheckbutton")
         self.checkbox_ignore = ttk.Checkbutton(self, text="Debug: Ignore password validation",
                                                variable=self.checkbox_ignore_value, style="Loginbox.TCheckbutton")
 
@@ -55,12 +58,14 @@ class LoginBox(ttk.Frame):
         self.label.grid(row=0, column=0, padx=(10, 0), pady=(10, 0))
         self.entry_pw.grid(row=1, column=0, padx=10, pady=10)
         self.login_button.grid(row=2, column=0, padx=10)
-        self.checkbox_ignore.grid(row=3, column=0, padx=10, pady=10)
+        self.checkbox_autologin.grid(row=3, column=0, padx=10, pady=(10, 0), sticky="w")
+        self.checkbox_ignore.grid(row=4, column=0, padx=10, pady=10, sticky="w")
 
         # Key events for Enter-Button
         self.login_button.bind("<Return>", lambda e: self.validate_master_password())
         self.entry_pw.bind("<Return>", lambda e: self.validate_master_password())
-        self.checkbox_ignore.bind("<Return>", lambda e: self.toggle_checkbox())
+        self.checkbox_ignore.bind("<Return>", lambda e: self.toggle_checkbox(self.checkbox_ignore_value))
+        self.checkbox_autologin.bind("<Return>", lambda e: self.toggle_checkbox(self.checkbox_autologin_value))
 
         # set focus on entry
         self.entry_pw.focus_set()
@@ -73,11 +78,12 @@ class LoginBox(ttk.Frame):
         else:
             messagebox.showerror("Incorrect Password", "Password is incorrect")
 
-    def toggle_checkbox(self):
-        if self.checkbox_ignore_value.get():
-            self.checkbox_ignore_value.set(0)
+    @staticmethod
+    def toggle_checkbox(checkbox):
+        if checkbox.get():
+            checkbox.set(0)
         else:
-            self.checkbox_ignore_value.set(1)
+            checkbox.set(1)
 
 
 # holds Login entry-fields and buttons
