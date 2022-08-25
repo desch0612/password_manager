@@ -1,5 +1,6 @@
 import connection_database
 import hash_functions
+import os.path
 from cryptography.fernet import Fernet
 
 
@@ -38,6 +39,10 @@ def fetch_all():
 # This function added all information including the hash_value into the database.
 def Insert_hash_value(db_id, website, password, security_level):
     security_level = 1
+
+    if not os.path.exists("secret.key"):
+        hash_functions.generatekey()
+
     hash_value = hash_functions.encrypt(password)
     sql_statement = f"INSERT INTO Hash_List (pw_id,Website_Name,Hash_Value,Security_Level) VALUES ({db_id},'{website}','{hash_value}',{security_level})"
     connection_database.db_cursor.execute(sql_statement)
