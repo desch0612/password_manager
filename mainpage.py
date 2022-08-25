@@ -9,8 +9,7 @@ import generic_functions as func
 import generate as gen
 import db_functions
 import styles
-
-
+import frame_switcher
 
 
 # Enumeration of States for Item-Object
@@ -38,12 +37,15 @@ class TopBar(ttk.Frame):
 
         # Init Widgets
         self.label_title = ttk.Label(self, text="Password List", font=("", 18), style="Top.TLabel")
+        self.button_logout = ttk.Button(self, image=self.img_setting, padding="2 2 2 2",
+                                          command=lambda: frame_switcher.switch_frame("login_page"), style="Item2.TLabel")
         self.button_settings = ttk.Button(self, image=self.img_setting, padding="2 2 2 2",
                                           command=self.button_settings_click, style="Item2.TLabel")
 
         # Place widgets
         self.label_title.grid(row=0, column=0, sticky=tk.W, padx=10)
-        self.button_settings.grid(row=0, column=1, sticky=tk.E, padx=7, pady=10)
+        self.button_logout.grid(row=0, column=1, sticky=tk.E, padx=7, pady=10)
+        self.button_settings.grid(row=0, column=2, sticky=tk.E, padx=7, pady=10)
 
         # Widgets Bindings
         self.button_settings.bind("<ButtonPress-1>",
