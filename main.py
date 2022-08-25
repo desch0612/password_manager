@@ -10,6 +10,8 @@ import login
 import images
 import styles
 import frame_switcher
+import config
+import os.path
 
 
 # Class for initial Window config
@@ -24,6 +26,10 @@ class MainApplication(ttk.Frame):
         self.parent.rowconfigure(0, weight=1)
         self.parent.columnconfigure(0, weight=1)
 
+        # Check if config file exists
+        if not os.path.exists("config.ini"):
+            config.create_config_file()
+
         # Load images
         images.load_images()
 
@@ -34,12 +40,16 @@ class MainApplication(ttk.Frame):
         self.main_page = mainpage.MainPage(self.parent)     # todo: Maybe use self instead of root
         self.login_page = login.LoginPage(self.parent)
 
-        # Add Main- and Login page to frame collection for switch-ability
+        # Add Main- and Login page to frame collection for switch-ability outside of main.py
         frame_switcher.add_frame("main_page", self.main_page)
         frame_switcher.add_frame("login_page", self.login_page)
 
-        # Show Login page
-        self.login_page.tkraise()
+        if int(config.read_value("LOGIN", "AutomaticLogin")):
+            # Skip login
+            self.main_page.tkraise()
+        else:
+            # Show Login page
+            self.login_page.tkraise()
 
 
 def main():
