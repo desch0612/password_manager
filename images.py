@@ -6,6 +6,7 @@ def load_images():
     # Transparent img will serve as an alternative to .grid_remove() without messing with the placement of other widgets
     global glob_img_transparent
     global glob_img_settings
+    global glob_img_signout
     global glob_img_add
     global glob_img_copy
     global glob_img_edit
@@ -21,6 +22,7 @@ def load_images():
     glob_img_transparent = tk.PhotoImage(file="icons/transparent16x16.png")
     glob_img_add = tk.PhotoImage(file="icons/plus16x16.png")
     glob_img_settings = tk.PhotoImage(file="icons/einstellungen.png")
+    glob_img_signout = tk.PhotoImage(file="icons/signout16x16.png")
     glob_img_copy = tk.PhotoImage(file="icons/kopieren.png")
     glob_img_edit = tk.PhotoImage(file="icons/bleistift.png")
     glob_img_image_not_found = tk.PhotoImage(file="icons/frage-quadrat.png")
@@ -40,6 +42,7 @@ def get_image(image):
     switch = {
         "transparent16x16.png": glob_img_transparent,
         "einstellungen.png": glob_img_settings,
+        "signout16x16.png": glob_img_signout,
         "bleistift.png": glob_img_edit,
         "kopieren.png": glob_img_copy,
         "trashcan.png": glob_img_delete,
