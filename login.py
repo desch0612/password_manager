@@ -70,10 +70,11 @@ class LoginBox(ttk.Frame):
         # set focus on entry
         self.entry_pw.focus_set()
 
+
     def validate_master_password(self):
         if self.checkbox_ignore_value.get():
             frame_switcher.switch_frame("main_page")
-        elif self.entry_pw.get() == db_functions.fetch_mp():   # todo: hash self.entry_pw
+        elif hashlib.sha256(self.entry_pw.get().encode()).hexdigest() == db_functions.fetch_mp():
             frame_switcher.switch_frame("main_page")
         else:
             messagebox.showerror("Incorrect Password", "Password is incorrect")
@@ -120,8 +121,8 @@ class RegisterBox(ttk.Frame):
         self.entry_pw.focus_set()
 
     def register_master_password(self):
-        mp = self.entry_pw.get()
-        hashed_mp = hashlib.sha256(mp.encode()).hexdigest()
+        mp = self.entry_pw.get()                            # plaintext master_password from the user.
+        hashed_mp = hashlib.sha256(mp.encode()).hexdigest() # hashed_master_password.
         if mp:
             # password entry is not empty
             # check for confirmation match
